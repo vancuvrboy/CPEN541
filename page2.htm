@@ -1,8 +1,18 @@
-<!DOCTYPE html> <html><!--
- Page saved with SingleFile 
- url: https://userstudy.link/HAIcollaboration/AIConfidence.html#tutorial 
- saved date: Thu Nov 21 2024 22:10:54 GMT-0800 (Pacific Standard Time)
---><meta charset=utf-8><title>Human-AI Decision-Making</title><meta name=viewport content="width=device-width, initial-scale=1"><meta http-equiv=X-UA-Compatible content="ie=edge"><meta name=referrer content=no-referrer><link rel="shortcut icon" href=data:,><style>.sf-hidden{display:none!important}</style><link rel=canonical href=https://userstudy.link/HAIcollaboration/AIConfidence.html#tutorial><meta http-equiv=content-security-policy content="default-src 'none'; font-src 'self' data:; img-src 'self' data:; style-src 'unsafe-inline'; media-src 'self' data:; script-src 'unsafe-inline' data:; object-src 'self' data:; frame-src 'self' data:;"><body>
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Human-AI Decision-Making</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta name="referrer" content="no-referrer">
+    <link rel="shortcut icon" href="data:,">
+    <link rel="canonical" href="https://userstudy.link/HAIcollaboration/AIConfidence.html#tutorial">
+
+    <!-- Add Bootstrap CSS for styling -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
  
  <div class=container>
  <h2 id=title1>Human-AI Decision-Making <small> Making decisions with the assistance of AI</small></h2>
@@ -91,9 +101,44 @@
  <p class="container-fluid list-group-item list-group-item-light" style=font-size:20px;color:orange>Participation in this study is voluntary. You are free to withdraw or discontinue participation at any time.</p>
  </div>
  
+<!-- create two buttons that link to URLs: accept and reject
  <button id=accept_button type=button class="btn btn-primary" data-dismiss=modal>Accept</button>
  <button id=reject_button type=button class="btn btn-primary" data-dismiss=modal style=border-color:gray;background-color:gray>Reject</button>
- 
+  -->
+  <a id="accept_button" class="btn btn-primary" href="https://vancuvrboy.github.io/CPEN541/page3.htm" role="button" style="text-decoration: none;">Accept</a>
+<!--  <a id="reject_button" class="btn btn-primary" href="https://vancuvrboy.github.io/CPEN541/page2-reject.htm" role="button" style="text-decoration: none; border-color: gray; background-color: gray;">Reject</a>  -->
+
+  
+
+        <!-- Reject Button -->
+        <a id="reject_button" class="btn btn-primary" href="#" role="button" style="text-decoration: none; border-color: gray; background-color: gray;" data-bs-toggle="modal" data-bs-target="#confirmModal">Reject</a>
+    </div>
+
+    <!-- Confirmation Modal -->
+    <div class="modal fade" id="confirmModal" tabindex="-1" aria-labelledby="confirmModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="confirmModalLabel">Are you sure?</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    Are you sure you want to reject?
+                </div>
+                <div class="modal-footer">
+                    <a href="https://vancuvrboy.github.io/CPEN541/page2-reject.htm" class="btn btn-danger">Yes</a>
+                    <a href="https://vancuvrboy.github.io/CPEN541/page3.htm" class="btn btn-secondary" data-bs-dismiss="modal">No</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+  
+
+
  </div><div id=questionnaire class="tab-pane fade sf-hidden">
  
  
