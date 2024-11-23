@@ -18,7 +18,7 @@
       return params.get("participantId");
     }
 
-    function submitResponse(response) {
+    async function submitResponse(response) {
       const participantId = getParticipantId();
       if (!participantId) {
         alert("Participant ID is missing! Cannot submit response.");
@@ -28,27 +28,42 @@
       // Apps Script URL
       const scriptUrl = "https://script.google.com/macros/s/AKfycbwMOtCAHkOmqH28gyg4G9VdsqjFl5w1LP0drm4tlot55WvH-x-_eMGfT2gqj9LQqjWaZA/exec";
 
-      // Send data to Apps Script
-      fetch(scriptUrl, {
-        method: "POST",
-        body: JSON.stringify({
-          participantId: participantId,
-          questionKey: "Task1", // Adjust for each task/question
-          response: response,
-        }),
-        headers: {
-          "Content-Type": "application/json",
-        },
-      })
-        .then(() => {
-          alert("Response submitted successfully!");
-          // Redirect to the next page
-          window.location.href = `nextpage.html?participantId=${participantId}`;
-        })
-        .catch((error) => {
-          console.error("Error submitting response:", error);
-          alert("Failed to submit response. Please try again.");
+      // Prepare the data
+      const data = {
+        participantId: participantId,
+        questionKey: "Task1", // Adjust for each task/question
+        response: response,
+      };
+
+      try {
+        const response = await fetch(scriptUrl, {
+          method: "POST",
+          body: JSON.stringify(data),
+          headers: {
+            "Content-Type": "application/json",
+          },
         });
+
+        if (!response.ok) {
+          const errorText = await response.text();
+          logServerError(response.status, errorText);
+          throw new Error(`Server responded with status ${response.status}`);
+        }
+
+        alert("Response submitted successfully!");
+        // Redirect to the next page
+        window.location.href = `nextpage.html?participantId=${participantId}`;
+      } catch (error) {
+        console.error("Error submitting response:", error);
+        alert("Failed to submit response. Check the console for more details.");
+      }
+    }
+
+    // Helper function to log server errors
+
+    function logServerError(status, message) {
+      console.error(`Server Error (${status}): ${message}`);
+      alert(`Server Error (${status}): ${message}`);
     }
   </script>
 </body>
