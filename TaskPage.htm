@@ -19,52 +19,45 @@
     }
 
     async function submitResponse(response) {
-      const participantId = getParticipantId();
-      if (!participantId) {
-        alert("Participant ID is missing! Cannot submit response.");
-        return;
-      }
+  const participantId = getParticipantId();
+  if (!participantId) {
+    alert("Participant ID is missing! Cannot submit response.");
+    return;
+  }
 
-      // Apps Script URL
-      const scriptUrl = "https://script.google.com/macros/s/AKfycbwMOtCAHkOmqH28gyg4G9VdsqjFl5w1LP0drm4tlot55WvH-x-_eMGfT2gqj9LQqjWaZA/exec";
+  const scriptUrl = "https://script.google.com/macros/s/AKfycbwMOtCAHkOmqH28gyg4G9VdsqjFl5w1LP0drm4tlot55WvH-x-_eMGfT2gqj9LQqjWaZA/exec";
 
-      // Prepare the data
-      const data = {
-        participantId: participantId,
-        questionKey: "Task1", // Adjust for each task/question
-        response: response,
-      };
+  const data = {
+    participantId: participantId,
+    questionKey: "Task1", // Adjust for each task/question
+    response: response,
+  };
 
-      try {
-        const response = await fetch(scriptUrl, {
-          method: "POST",
-          body: JSON.stringify(data),
-          headers: {
-            "Content-Type": "application/json",
-          },
-        });
+  try {
+    const result = await fetch(scriptUrl, {
+      method: "POST",
+      body: JSON.stringify(data), // Serialize the data
+      headers: {
+        "Content-Type": "text/plain", // Use text/plain to avoid CORS issues
+      },
+    });
 
-        if (!response.ok) {
-          const errorText = await response.text();
-          logServerError(response.status, errorText);
-          throw new Error(`Server responded with status ${response.status}`);
-        }
-
-        alert("Response submitted successfully!");
-        // Redirect to the next page
-        window.location.href = `nextpage.html?participantId=${participantId}`;
-      } catch (error) {
-        console.error("Error submitting response:", error);
-        alert("Failed to submit response. Check the console for more details.");
-      }
+    if (!result.ok) {
+      const errorText = await result.text();
+      console.error("Server Error:", errorText);
+      alert(`Failed to submit response. Server responded with status ${result.status}`);
+      return;
     }
 
-    // Helper function to log server errors
+    const responseText = await result.text();
+    console.log("Server Response:", responseText);
+    alert("Response submitted successfully!");
+  } catch (error) {
+    console.error("Error submitting response:", error);
+    alert("An error occurred. Please try again.");
+  }
+}
 
-    function logServerError(status, message) {
-      console.error(`Server Error (${status}): ${message}`);
-      alert(`Server Error (${status}): ${message}`);
-    }
   </script>
 </body>
 </html>
