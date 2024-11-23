@@ -19,46 +19,46 @@
     }
 
     async function submitResponse(response) {
-  const participantId = getParticipantId();
-  if (!participantId) {
-    alert("Participant ID is missing! Cannot submit response.");
-    return;
-  }
-
-  const scriptUrl = "https://script.google.com/macros/s/AKfycbxKuOkKGZeh0WXoR1iOSyD3i8UPwzEEk5Ifvi0N2QKGvzkEALt0xnN6UACipTYWCMlBkg/exec";
-
-
-  const data = {
-    participantId: participantId,
-    questionKey: "Task1", // Adjust for each task/question
-    response: response,
-  };
-
-  try {
-    const result = await fetch(scriptUrl, {
-      method: "POST",
-      body: JSON.stringify(data), // Serialize the data
-      headers: {
-        "Content-Type": "text/plain", // Use text/plain to avoid CORS issues
-      },
-    });
-
-    if (!result.ok) {
-      const errorText = await result.text();
-      console.error("Server Error:", errorText);
-      alert(`Failed to submit response. Server responded with status ${result.status}`);
+    const participantId = getParticipantId();
+    if (!participantId) {
+      alert("Participant ID is missing!");
       return;
     }
 
-    const responseText = await result.text();
-    console.log("Server Response:", responseText);
-    alert("Response submitted successfully!");
-  } catch (error) {
-    console.error("Error submitting response:", error);
-    alert("An error occurred. Please try again.");
-  }
-}
+    const scriptUrl = "https://script.google.com/macros/s/AKfycbxKuOkKGZeh0WXoR1iOSyD3i8UPwzEEk5Ifvi0N2QKGvzkEALt0xnN6UACipTYWCMlBkg/exec";
 
-  </script>
+
+    const data = {
+      participantId: participantId,
+      questionKey: "Task1",
+      response: response,
+    };
+
+    try {
+      const result = await fetch(scriptUrl, {
+        method: "POST",
+        body: JSON.stringify(data),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      if (!result.ok) {
+        const errorText = await result.text();
+        console.error("Server Error:", errorText);
+        alert(`Failed to submit response. Server responded with status ${result.status}`);
+        return;
+      }
+
+      const responseText = await result.json();
+      console.log("Server Response:", responseText);
+      alert("Response submitted successfully!");
+    } catch (error) {
+      console.error("Error submitting response:", error);
+      alert("An error occurred. Please try again.");
+    }
+  }
+
+</script>
 </body>
 </html>
