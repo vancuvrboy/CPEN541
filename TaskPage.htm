@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Task Page</title>
+</head>
+<body>
+  <h1>Experiment Task</h1>
+  <p>Please select an option below:</p>
+  
+  <button onclick="submitResponse('Option 1')">Option 1</button>
+  <button onclick="submitResponse('Option 2')">Option 2</button>
+
+  <script>
+    function getParticipantId() {
+      const params = new URLSearchParams(window.location.search);
+      return params.get("participantId");
+    }
+
+    function submitResponse(response) {
+      const participantId = getParticipantId();
+      if (!participantId) {
+        alert("Participant ID is missing! Cannot submit response.");
+        return;
+      }
+
+      // Apps Script URL
+      const scriptUrl = "https://script.google.com/macros/s/AKfycbwMOtCAHkOmqH28gyg4G9VdsqjFl5w1LP0drm4tlot55WvH-x-_eMGfT2gqj9LQqjWaZA/exec";
+
+      // Send data to Apps Script
+      fetch(scriptUrl, {
+        method: "POST",
+        body: JSON.stringify({
+          participantId: participantId,
+          questionKey: "Task1", // Adjust for each task/question
+          response: response,
+        }),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      })
+        .then(() => {
+          alert("Response submitted successfully!");
+          // Redirect to the next page
+          window.location.href = `nextpage.html?participantId=${participantId}`;
+        })
+        .catch((error) => {
+          console.error("Error submitting response:", error);
+          alert("Failed to submit response. Please try again.");
+        });
+    }
+  </script>
+</body>
+</html>
