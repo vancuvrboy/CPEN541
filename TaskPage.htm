@@ -25,11 +25,10 @@
     return;
   }
 
-  const questionKey = "Task1"; // Replace with your current task key
-  const scriptUrl = "https://script.google.com/macros/s/AKfycbyUONRe32Ds9a9brvuyiwiJSL6ryeLlNiceOJk0c4neqtQrGkpcpxbogjtFJ8ryMkg8XQ/exec";
+  const scriptUrl = "https://script.google.com/macros/s/AKfycbyHM0CPATTTaFRingJxQB8P-DBRhTZDuv2cXBjsKYl89c4EH7PaUa_jVy0fPE3fjfUwag/exec";
 
   // Construct query string
-  const queryString = `?participantId=${encodeURIComponent(participantId)}&questionKey=${encodeURIComponent(questionKey)}&response=${encodeURIComponent(response)}`;
+  const queryString = `?participantId=${encodeURIComponent(participantId)}&response=${encodeURIComponent(response)}`;
 
   // Send GET request
   fetch(scriptUrl + queryString, {
