@@ -28,35 +28,35 @@
     const scriptUrl = "https://script.google.com/macros/s/AKfycbxT59hd3T76gQzpUB1qsbUlwCLwdUwWoNqOkhX4Y8oItIYK1abeRVYonaDzeq4oXabUdg/exec";
 
     const data = {
-      participantId: participantId,
-      questionKey: "Task1",
-      response: response,
-    };
+    participantId: participantId,
+    questionKey: "Task1",
+    response: response,
+  };
 
-    try {
-      const result = await fetch(scriptUrl, {
-        method: "POST",
-        body: JSON.stringify(data),
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
+  try {
+    const result = await fetch(scriptUrl, {
+      method: "POST",
+      body: JSON.stringify(data),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
 
-      if (!result.ok) {
-        const errorText = await result.text();
-        console.error("Server Error:", errorText);
-        alert(`Failed to submit response. Server responded with status ${result.status}`);
-        return;
-      }
-
-      const responseText = await result.json();
-      console.log("Server Response:", responseText);
-      alert("Response submitted successfully!");
-    } catch (error) {
-      console.error("Error submitting response:", error);
-      alert("Error submitting response:", error);
+    if (!result.ok) {
+      const errorText = await result.text();
+      console.error("Server Error:", errorText);
+      alert(`Failed to submit response. Server responded with status ${result.status}`);
+      return;
     }
+
+    const responseJson = await result.json();
+    console.log("Server Response:", responseJson);
+    alert("Response submitted successfully!");
+  } catch (error) {
+    console.error("Error submitting response:", error);
+    alert("Error occurred. Please check console for details.");
   }
+}
 
 </script>
 </body>
