@@ -129,72 +129,172 @@
         <div id="ai_confidence" style="display: flex; gap: 20px; align-items: center;">
             <!-- AI Prediction Text Box -->
             <div id="ai_text" 
-                style="width: 480px; 
-                    height: 270px; 
-                    border: 2px solid black; 
-                    display: flex; 
-                    align-items: flex-start; 
-                    justify-content: flex-start; 
-                    padding: 10px; 
-                    background-color: white; 
-                    font-size: 12px; 
-                    overflow: hidden; 
-                    white-space: pre-wrap;">
-            <!-- Initially blank -->
+                 style="width: 480px; 
+                        height: 270px; 
+                        border: 2px solid black; 
+                        display: flex; 
+                        align-items: flex-start; 
+                        justify-content: flex-start; 
+                        padding: 10px; 
+                        background-color: white; 
+                        font-size: 12px; 
+                        overflow: hidden; 
+                        white-space: pre-wrap;">
+              <!-- Initially blank -->
             </div>
           
-            <!-- AI Video Container
-            <div style="width: 480px; height: 270px; border: 2px solid black; display: flex; align-items: center; justify-content: center; background-color: white;">
+            <!-- AI Video Container -->
+            <div id="video_container" 
+                 style="width: 480px; 
+                        height: 270px; 
+                        border: 2px solid black; 
+                        display: flex; 
+                        align-items: center; 
+                        justify-content: center; 
+                        background-color: white;">
+              <!-- Placeholder text or an empty space -->
+              <p id="video_placeholder" 
+                 style="display: block; 
+                        font-size: 14px; 
+                        color: gray; 
+                        text-align: center;">
+                Videobot will make prediction here
+              </p>
               <video id="ai_video" width="480" height="270" style="display: none;">
-                <source src="https://vancuvrboy.github.io/CPEN541/AI_prediction.mp4" type="video/mp4">
+                <source id="video_source" src="" type="video/mp4">
                 Your browser does not support the video tag.
               </video>
-            </div>  -->
-
-            <div id="video_container" style="width: 480px; height: 270px; border: 2px solid black; display: flex; align-items: center; justify-content: center; background-color: white;">
-                <!-- Placeholder text or an empty space -->
-                <p id="video_placeholder" style="display: block; font-size: 14px; color: gray; text-align: center;">Videobot will make prediction here</p>
-                <video id="ai_video" width="480" height="270" style="display: none;">
-                  <source src="https://vancuvrboy.github.io/CPEN541/AI_prediction.mp4" type="video/mp4">
-                  Your browser does not support the video tag.
-                </video>
-              </div>
-              
-
+            </div>
           
-          <!-- Button to trigger AI prediction -->
-          <button id="ai_prediction_btn" class="btn btn-primary" style="height: 270px; width: 100px;">AI Prediction</button>
-    </div>
+            <!-- AI Prediction Buttons -->
+            <div id="ai_buttons" 
+                 style="display: flex; 
+                        flex-direction: column; 
+                        gap: 10px; 
+                        height: 270px; 
+                        width: 100px;">
+              <button id="textbot_btn" class="btn btn-primary" style="flex: 1;">Textbot</button>
+              <button id="audiobot_btn" class="btn btn-primary" style="flex: 1;">Audiobot</button>
+              <button id="videobot_btn" class="btn btn-primary" style="flex: 1;">Videobot</button>
+            </div>
+          </div>
+          
+        
           <script>
-            document.getElementById("ai_prediction_btn").addEventListener("click", function () {
-                // Hide the placeholder text
-                const placeholder = document.getElementById("video_placeholder");
-                placeholder.style.display = "none";
-
-                // The prediction text
-                const predictionText = "AI predicts: High likelihood of approval.";
-                const aiText = document.getElementById("ai_text");
-                aiText.textContent = ""; // Clear the text box before typing
-
-                // Typing effect logic
-                let index = 0;
-                function typeCharacter() {
-                    if (index < predictionText.length) {
-                        aiText.textContent += predictionText[index];
-                        index++;
-                        setTimeout(typeCharacter, 20); // Adjust typing speed here
-                    }
+            // Variables for the bot texts and videos
+            const textbot_text = "Textbot: This is the prediction from the text-only bot.";
+            const audiovideobot_text = "Audiobot/Videobot: This is the prediction from the audio or video bot.";
+            const audiobot_video = "audiobot.mp4"; // Replace with the actual path or URL
+            const videobot_video = "videobot.mp4"; // Replace with the actual path or URL
+          
+            // Function to disable other buttons
+            function disableOtherButtons(exceptButtonId) {
+              const buttons = ['textbot_btn', 'audiobot_btn', 'videobot_btn'];
+              buttons.forEach(function(buttonId) {
+                if (buttonId !== exceptButtonId) {
+                  document.getElementById(buttonId).disabled = true;
                 }
-                typeCharacter(); // Start the typing effect
-
-                // Play video without controls
-                const video = document.getElementById("ai_video");
-                video.style.display = "block"; // Show video
-                video.controls = false; // Ensure controls are disabled
-                video.play(); // Play the video
+              });
+            }
+          
+            // Textbot button click handler
+            document.getElementById("textbot_btn").addEventListener("click", function() {
+              // Disable other buttons
+              disableOtherButtons('textbot_btn');
+          
+              // Hide the video and show placeholder
+              const placeholder = document.getElementById("video_placeholder");
+              placeholder.style.display = "block"; // Show placeholder
+              const video = document.getElementById("ai_video");
+              video.style.display = "none"; // Hide video
+              video.pause(); // Stop video if playing
+          
+              // Clear and start typing the text from textbot_text
+              const aiText = document.getElementById("ai_text");
+              aiText.textContent = ""; // Clear the text box before typing
+          
+              // Typing effect logic
+              let index = 0;
+              function typeCharacter() {
+                if (index < textbot_text.length) {
+                  aiText.textContent += textbot_text[index];
+                  index++;
+                  setTimeout(typeCharacter, 20); // Adjust typing speed here
+                }
+              }
+              typeCharacter(); // Start the typing effect
             });
-
-        </script>
+          
+            // Audiobot button click handler
+            document.getElementById("audiobot_btn").addEventListener("click", function() {
+              // Disable other buttons
+              disableOtherButtons('audiobot_btn');
+          
+              // Hide the placeholder text
+              const placeholder = document.getElementById("video_placeholder");
+              placeholder.style.display = "none";
+          
+              // Update the video source to audiobot_video
+              const video = document.getElementById("ai_video");
+              const videoSource = document.getElementById("video_source");
+              videoSource.src = audiobot_video; // Set video source
+              video.load(); // Reload the video with the new source
+              video.style.display = "block"; // Show video
+              video.controls = false; // Ensure controls are disabled
+              video.play(); // Play the video
+          
+              // Clear and start typing the text from audiovideobot_text
+              const aiText = document.getElementById("ai_text");
+              aiText.textContent = ""; // Clear the text box before typing
+          
+              // Typing effect logic
+              let index = 0;
+              function typeCharacter() {
+                if (index < audiovideobot_text.length) {
+                  aiText.textContent += audiovideobot_text[index];
+                  index++;
+                  setTimeout(typeCharacter, 20); // Adjust typing speed here
+                }
+              }
+              typeCharacter(); // Start the typing effect
+            });
+          
+            // Videobot button click handler
+            document.getElementById("videobot_btn").addEventListener("click", function() {
+              // Disable other buttons
+              disableOtherButtons('videobot_btn');
+          
+              // Hide the placeholder text
+              const placeholder = document.getElementById("video_placeholder");
+              placeholder.style.display = "none";
+          
+              // Update the video source to videobot_video
+              const video = document.getElementById("ai_video");
+              const videoSource = document.getElementById("video_source");
+              videoSource.src = videobot_video; // Set video source
+              video.load(); // Reload the video with the new source
+              video.style.display = "block"; // Show video
+              video.controls = false; // Ensure controls are disabled
+              video.play(); // Play the video
+          
+              // Clear and start typing the text from audiovideobot_text
+              const aiText = document.getElementById("ai_text");
+              aiText.textContent = ""; // Clear the text box before typing
+          
+              // Typing effect logic
+              let index = 0;
+              function typeCharacter() {
+                if (index < audiovideobot_text.length) {
+                  aiText.textContent += audiovideobot_text[index];
+                  index++;
+                  setTimeout(typeCharacter, 20); // Adjust typing speed here
+                }
+              }
+              typeCharacter(); // Start the typing effect
+            });
+          </script>
+          
+        
         
           
           
