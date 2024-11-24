@@ -18,45 +18,34 @@
       return params.get("participantId");
     }
 
-    async function submitResponse(response) {
-    const participantId = getParticipantId();
-    if (!participantId) {
-      alert("Participant ID is missing!");
-      return;
-    }
-
-    const scriptUrl = "https://script.google.com/macros/s/AKfycbxT59hd3T76gQzpUB1qsbUlwCLwdUwWoNqOkhX4Y8oItIYK1abeRVYonaDzeq4oXabUdg/exec";
-
-    const data = {
-    participantId: participantId,
-    questionKey: "Task1",
-    response: response,
-  };
-
-  try {
-    const result = await fetch(scriptUrl, {
-      method: "POST",
-      body: JSON.stringify(data),
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
-
-    if (!result.ok) {
-      const errorText = await result.text();
-      console.error("Server Error:", errorText);
-      alert(`Failed to submit response. Server responded with status ${result.status}`);
-      return;
-    }
-
-    const responseJson = await result.json();
-    console.log("Server Response:", responseJson);
-    alert("Response submitted successfully!");
-  } catch (error) {
-    console.error("Error submitting response:", error);
-    alert("Error occurred. Please check console for details.");
+    function submitResponse(response) {
+  const participantId = getParticipantId();
+  if (!participantId) {
+    alert("Participant ID is missing!");
+    return;
   }
+
+  const questionKey = "Task1"; // Replace with your current task key
+  const scriptUrl = "https://script.google.com/macros/s/AKfycbxLDZOQr2tzkmJMnhakex8zoV_8aPZnqeSP5gv1S3tZMJ35UhVOD-Oqplf-gZgrZqAyJw/exec";
+
+  // Construct query string
+  const queryString = `?participantId=${encodeURIComponent(participantId)}&questionKey=${encodeURIComponent(questionKey)}&response=${encodeURIComponent(response)}`;
+
+  // Send GET request
+  fetch(scriptUrl + queryString, {
+    method: "GET",
+  })
+    .then((result) => result.text())
+    .then((text) => {
+      console.log("Server Response:", text);
+      alert("Response submitted successfully!");
+    })
+    .catch((error) => {
+      console.error("Error submitting response:", error);
+      alert("An error occurred. Please try again.");
+    });
 }
+
 
 </script>
 </body>
