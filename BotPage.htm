@@ -128,7 +128,7 @@
     
         <div id="ai_confidence" style="display: flex; gap: 20px; align-items: center;">
             <!-- AI Prediction Text Box -->
-            <div id="ai_text" style="width: 10%; height: 270px; border: 2px solid black; display: flex; align-items: center; justify-content: center; background-color: white; font-size: 16px;">
+            <div id="ai_text" style="width: 480px; height: 270px; border: 2px solid black; display: flex; align-items: center; justify-content: center; background-color: white; font-size: 12px;">
               <!-- Initially blank -->
             </div>
           
@@ -142,18 +142,18 @@
 
             <div id="video_container" style="width: 480px; height: 270px; border: 2px solid black; display: flex; align-items: center; justify-content: center; background-color: white;">
                 <!-- Placeholder text or an empty space -->
-                <p id="video_placeholder" style="display: block; font-size: 14px; color: gray; text-align: center;">Video will play here</p>
+                <p id="video_placeholder" style="display: block; font-size: 14px; color: gray; text-align: center;">Videobot will make prediction here</p>
                 <video id="ai_video" width="480" height="270" style="display: none;">
                   <source src="https://vancuvrboy.github.io/CPEN541/AI_prediction.mp4" type="video/mp4">
                   Your browser does not support the video tag.
                 </video>
               </div>
               
-          </div>
+
           
           <!-- Button to trigger AI prediction -->
-          <button id="ai_prediction_btn" class="btn btn-primary" style="height: 270px">AI Prediction</button>
-          
+          <button id="ai_prediction_btn" class="btn btn-primary" style="height: 270px; width: 100px;">AI Prediction</button>
+        </div>
           <script>
             document.getElementById("ai_prediction_btn").addEventListener("click", function () {
                 // Hide the placeholder text
