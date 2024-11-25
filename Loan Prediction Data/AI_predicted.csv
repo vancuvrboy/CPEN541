@@ -1,0 +1,25 @@
+Loan_ID,Gender,Married,Dependents,Education,ApplicantIncome,LoanAmount,Loan_Amount_Term,Loan_Status,Predicted_Loan_Status
+LP002265,Male,Yes,2,Not Graduate,2805.5,113.0,180.0,Y,Y
+LP001384,Male,Yes,3+,Not Graduate,2448.0,94.0,480.0,Y,N
+LP001726,Male,Yes,0,Graduate,4614.5,131.0,360.0,Y,Y
+LP002158,Male,Yes,0,Not Graduate,3833.0,100.0,480.0,N,N
+LP001926,Male,Yes,0,Graduate,4704.0,120.0,360.0,Y,Y
+LP001572,Male,Yes,0,Graduate,9323.0,75.0,180.0,Y,Y
+LP001636,Male,Yes,0,Graduate,4600.0,73.0,180.0,Y,Y
+LP002364,Male,Yes,0,Graduate,14880.0,96.0,360.0,Y,Y
+LP002740,Male,Yes,3+,Graduate,6417.0,157.0,180.0,Y,Y
+LP001716,Male,Yes,0,Graduate,4683.5,137.0,360.0,Y,Y
+LP001426,Male,Yes,,Graduate,7000.5,180.0,360.0,Y,Y
+LP001333,Male,Yes,0,Graduate,2475.5,50.0,360.0,Y,Y
+LP001519,Female,No,0,Graduate,10833.0,225.0,360.0,N,N
+LP001155,Female,Yes,0,Not Graduate,2750.0,100.0,360.0,Y,N
+LP001665,Male,Yes,1,Graduate,4416.5,170.0,360.0,N,Y
+LP001581,Male,Yes,0,Not Graduate,2704.5,95.0,360.0,Y,N
+LP002424,Male,Yes,0,Graduate,11499.5,175.0,300.0,Y,Y
+LP001008,Male,No,0,Graduate,6000.0,141.0,360.0,Y,N
+LP002296,Male,No,0,Not Graduate,2755.0,65.0,300.0,N,N
+LP002051,Male,Yes,0,Graduate,3483.5,115.0,360.0,Y,Y
+LP001507,Male,Yes,0,Graduate,3715.0,122.0,360.0,Y,Y
+LP001914,Male,Yes,0,Graduate,4327.0,112.0,360.0,Y,Y
+LP001066,Male,Yes,0,Graduate,9560.0,191.0,360.0,Y,Y
+LP001345,Male,Yes,2,Not Graduate,5919.5,133.0,180.0,Y,Y

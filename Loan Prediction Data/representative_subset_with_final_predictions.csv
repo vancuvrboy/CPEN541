@@ -1,0 +1,41 @@
+Loan_ID,Gender,Married,Dependents,Education,ApplicantIncome,LoanAmount,Loan_Amount_Term,Loan_Status,Predicted_Loan_Status
+LP002265,Male,Yes,2,Not Graduate,2805.5,113.0,180.0,Y,True
+LP001384,Male,Yes,3+,Not Graduate,2448.0,94.0,480.0,Y,False
+LP001726,Male,Yes,0,Graduate,4614.5,131.0,360.0,Y,True
+LP001422,Female,No,0,Graduate,10408.0,259.0,360.0,Y,False
+LP002446,Male,Yes,2,Not Graduate,2936.5,125.0,360.0,N,True
+LP002789,Male,Yes,0,Graduate,5726.0,132.0,180.0,N,True
+LP002180,Male,No,0,Graduate,6822.0,141.0,360.0,Y,False
+LP002158,Male,Yes,0,Not Graduate,3833.0,100.0,480.0,N,False
+LP002209,Female,No,0,Graduate,3493.5,110.0,360.0,Y,False
+LP001926,Male,Yes,0,Graduate,4704.0,120.0,360.0,Y,True
+LP001572,Male,Yes,0,Graduate,9323.0,75.0,180.0,Y,True
+LP001636,Male,Yes,0,Graduate,4600.0,73.0,180.0,Y,True
+LP002364,Male,Yes,0,Graduate,14880.0,96.0,360.0,Y,True
+LP002798,Male,Yes,0,Graduate,5221.5,162.0,360.0,Y,True
+LP002652,Male,No,0,Graduate,7648.0,311.0,360.0,N,False
+LP002740,Male,Yes,3+,Graduate,6417.0,157.0,180.0,Y,True
+LP001716,Male,Yes,0,Graduate,4683.5,137.0,360.0,Y,True
+LP001119,Male,No,0,Graduate,3600.0,80.0,360.0,N,False
+LP001426,Male,Yes,,Graduate,7000.5,180.0,360.0,Y,True
+LP001333,Male,Yes,0,Graduate,2475.5,50.0,360.0,Y,True
+LP001519,Female,No,0,Graduate,10833.0,225.0,360.0,N,False
+LP002585,Male,Yes,0,Graduate,4675.5,119.0,360.0,N,True
+LP001892,Male,No,0,Graduate,3761.5,126.0,360.0,Y,False
+LP001155,Female,Yes,0,Not Graduate,2750.0,100.0,360.0,Y,False
+LP001722,Male,Yes,0,Graduate,1050.0,135.0,360.0,N,True
+LP002444,Male,No,1,Not Graduate,3540.0,190.0,360.0,N,False
+LP001665,Male,Yes,1,Graduate,4416.5,170.0,360.0,N,True
+LP001581,Male,Yes,0,Not Graduate,2704.5,95.0,360.0,Y,False
+LP002424,Male,Yes,0,Graduate,11499.5,175.0,300.0,Y,True
+LP001008,Male,No,0,Graduate,6000.0,141.0,360.0,Y,False
+LP002296,Male,No,0,Not Graduate,2755.0,65.0,300.0,N,False
+LP002051,Male,Yes,0,Graduate,3483.5,115.0,360.0,Y,True
+LP001814,Male,Yes,2,Graduate,9703.0,112.0,360.0,Y,True
+LP002618,Male,Yes,1,Not Graduate,6701.0,138.0,360.0,N,False
+LP001507,Male,Yes,0,Graduate,3715.0,122.0,360.0,Y,True
+LP002370,Male,No,0,Not Graduate,2717.0,60.0,180.0,Y,False
+LP001914,Male,Yes,0,Graduate,4327.0,112.0,360.0,Y,True
+LP001066,Male,Yes,0,Graduate,9560.0,191.0,360.0,Y,True
+LP001345,Male,Yes,2,Not Graduate,5919.5,133.0,180.0,Y,True
+LP002434,Male,Yes,2,Not Graduate,4652.0,110.0,360.0,Y,True
