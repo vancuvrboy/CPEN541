@@ -55,7 +55,7 @@
     <div id=profile class=col-xs-5 style="height: 340px;">
     <h3 id=progress-text align=center>Mortgage Amount: $1,000,000</h3>
     
-    <div class="main" id="profile_details" style="display: none;">
+    <div class="main" id="profile_details" style="display: block;">
         <table id=tab1>
             <tbody><tr>
             <th>Annual Income</th>
@@ -108,21 +108,36 @@
                     </div>
                 </li>
         
-                <button id="next-task" type="button" class="btn btn-primary" data-dismiss="modal">Finish and Next</button>
+                <!-- Buttons and Result Area -->
+                <div class="button-result-container" style="display: flex; align-items: center; margin-top: 10px;">
+                    <!-- Lock in Choice Button -->
+                    <button id="lock-in-choice" type="button" class="btn btn-primary" disabled>Lock in Choice</button>
+        
+                    <!-- Your Result Area -->
+                    <div id="your_result" style="margin-left: 10px; display: none; font-weight: bold;">
+                        <!-- Result will be displayed here -->
+                    </div>
+        
+                    <!-- Finish and Next Button -->
+                    <button id="next-task" type="button" class="btn btn-primary" data-dismiss="modal" style="margin-left: 10px; display: none;">Finish and Next</button>
+                </div>
+        
                 <li id="showanswer_area" class="list-group-item list-group-item-light" style="display: none;">
                 </li>
             </form>
         
             <!-- Countdown Timer -->
-            <div id="countdown_timer" style="margin-left: 20px; margin-top: 20px; font-size: 20px; text-align: left; font-weight: bold;">
+            <div id="countdown_timer" style="margin-left: 20px; margin-top: 20px; font-size: 20px; text-align: left; font-weight: bold; color: darkred;">
                 Time Remaining: 03:00
             </div>
         </div>
+        
         
         <script>
             document.addEventListener("DOMContentLoaded", function () {
                 const timerElement = document.getElementById("countdown_timer");
                 let timeRemaining = 180; // 3 minutes in seconds
+                let countdownInterval; // Declare countdownInterval in a broader scope
         
                 function updateTimerDisplay() {
                     const minutes = Math.floor(timeRemaining / 60);
@@ -131,7 +146,7 @@
                 }
         
                 function startCountdown() {
-                    const countdownInterval = setInterval(() => {
+                    countdownInterval = setInterval(() => {
                         if (timeRemaining > 0) {
                             timeRemaining--;
                             updateTimerDisplay();
@@ -146,8 +161,99 @@
                 // Initialize timer display and start countdown
                 updateTimerDisplay();
                 startCountdown();
+        
+                // Variables to hold user's choice and time
+                let subjects_choice;
+                let subjects_time;
+        
+                // Correct answer variable (set this to the correct value)
+                const correct_answer = "1"; // Replace with the actual correct answer ("0" or "1" as strings)
+        
+                // Get the Lock in Choice button
+                const lockInChoiceButton = document.getElementById("lock-in-choice");
+        
+                // Flag to indicate if choice has been locked
+                let choiceLocked = false;
+        
+                // Function to check if a radio button is selected
+                function checkRadioSelection() {
+                    if (choiceLocked) {
+                        // If choice is locked, do not re-enable the button
+                        return;
+                    }
+                    const radios = document.getElementsByName('firstdecision');
+                    for (const radio of radios) {
+                        if (radio.checked) {
+                            lockInChoiceButton.disabled = false; // Enable the button
+                            return;
+                        }
+                    }
+                    lockInChoiceButton.disabled = true; // Disable the button if none selected
+                }
+        
+                // Add event listeners to radio buttons
+                const radioButtons = document.getElementsByName('firstdecision');
+                for (const radio of radioButtons) {
+                    radio.addEventListener('change', checkRadioSelection);
+                }
+        
+                // Handle Lock in Choice button click
+                lockInChoiceButton.addEventListener("click", function () {
+                    if (choiceLocked) {
+                        // Prevent multiple clicks
+                        return;
+                    }
+                    choiceLocked = true; // Set the flag
+        
+                    // Stop the countdown timer
+                    clearInterval(countdownInterval);
+        
+                    // Record the value of the radio buttons
+                    subjects_choice = undefined;
+                    for (const radio of radioButtons) {
+                        if (radio.checked) {
+                            subjects_choice = radio.value;
+                            break;
+                        }
+                    }
+        
+                    // This check is redundant but kept for safety
+                    if (subjects_choice === undefined) {
+                        alert("Please make a selection before locking in your choice.");
+                        return;
+                    }
+        
+                    // Record the remaining time
+                    subjects_time = timeRemaining;
+        
+                    // Disable the Lock in Choice button
+                    lockInChoiceButton.disabled = true;
+        
+                    // Disable the radio buttons
+                    for (const radio of radioButtons) {
+                        radio.disabled = true;
+                    }
+        
+                    // Show the Finish and Next button and your_result area
+                    document.getElementById("next-task").style.display = "inline-block";
+                    document.getElementById("your_result").style.display = "inline-block";
+        
+                    // Compare subjects_choice with correct_answer
+                    if (subjects_choice === correct_answer) {
+                        document.getElementById("your_result").textContent = "Correct choice!";
+                    } else {
+                        document.getElementById("your_result").textContent = "Incorrect choice...";
+                    }
+        
+                    // Optionally, store subjects_choice and subjects_time for further processing
+                    // e.g., send to server or store in hidden form fields
+                    console.log("Subject's Choice:", subjects_choice);
+                    console.log("Time Remaining:", subjects_time);
+                });
             });
         </script>
+        
+        
         
 
 </div>
