@@ -84,39 +84,72 @@
     <div class=col-xs-7>
     
     
-    <div class="container-fluid list-group-item list-group-item-warning" id=user_prediction_region style="height: 340px;">
-    <h3>Make your decision</h3>
-    
-    <p></p>
-    <form id=firstdecision1 class="container-fluid list-group-item list-group-item-light" style=display:block>
-    <li class="list-group-item list-group-item-light">
-    <div class=form-group>
-    <div style=display:inline-block>
-    <h4> 
-    What is your decision?
-    </h4>
-    </div>
-    <div class="form-check form-check-inline">
-    <input class=form-check-input type=radio name=firstdecision value=0 id=radio-first-decision-1>
-    <label class=form-check-label for=radio-first-decision-1>≤ 50k
-    </label>
-    </div>
-    
-    <div class="form-check form-check-inline">
-    <input class=form-check-input type=radio name=firstdecision value=1 id=radio-first-decision-2>
-    <label class=form-check-label for=radio-first-decision-2>&gt; 50k
-    </label>
-    </div>
-    
-    </div>
-    </li>
-    
-    
-    <button id=next-task type=button class="btn btn-primary" data-dismiss=modal> Finish and Next </button>
-    <li id=showanswer_area class="list-group-item list-group-item-light" style=display:none>
-    
-    </li></form>
-    </div>
+        <div class="container-fluid list-group-item list-group-item-warning" id="user_prediction_region" style="height: 340px;">
+            <h3>Make your decision</h3>
+        
+            <p></p>
+            <form id="firstdecision1" class="container-fluid list-group-item list-group-item-light" style="display: block;">
+                <li class="list-group-item list-group-item-light">
+                    <div class="form-group">
+                        <div style="display: inline-block;">
+                            <h4>
+                                What is your decision?
+                            </h4>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="firstdecision" value="0" id="reject-client">
+                            <label class="form-check-label" for="reject-client">Reject Client</label>
+                        </div>
+        
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="firstdecision" value="1" id="accept-client">
+                            <label class="form-check-label" for="accept-client">Accept Client</label>
+                        </div>
+                    </div>
+                </li>
+        
+                <button id="next-task" type="button" class="btn btn-primary" data-dismiss="modal">Finish and Next</button>
+                <li id="showanswer_area" class="list-group-item list-group-item-light" style="display: none;">
+                </li>
+            </form>
+        
+            <!-- Countdown Timer -->
+            <div id="countdown_timer" style="margin-left: 20px; margin-top: 20px; font-size: 20px; text-align: left; font-weight: bold;">
+                Time Remaining: 03:00
+            </div>
+        </div>
+        
+        <script>
+            document.addEventListener("DOMContentLoaded", function () {
+                const timerElement = document.getElementById("countdown_timer");
+                let timeRemaining = 180; // 3 minutes in seconds
+        
+                function updateTimerDisplay() {
+                    const minutes = Math.floor(timeRemaining / 60);
+                    const seconds = timeRemaining % 60;
+                    timerElement.textContent = `Time Remaining: ${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+                }
+        
+                function startCountdown() {
+                    const countdownInterval = setInterval(() => {
+                        if (timeRemaining > 0) {
+                            timeRemaining--;
+                            updateTimerDisplay();
+                        } else {
+                            clearInterval(countdownInterval);
+                            timerElement.textContent = "Time's up!";
+                            // Optional: Trigger any additional actions here when the timer reaches 0
+                        }
+                    }, 1000); // Update every second
+                }
+        
+                // Initialize timer display and start countdown
+                updateTimerDisplay();
+                startCountdown();
+            });
+        </script>
+        
+
 </div>
     <div class="list-group-item list-group-item-info" id=ai_suggestion_region style=display:block>
     
