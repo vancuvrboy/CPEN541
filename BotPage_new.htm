@@ -53,76 +53,211 @@
     <div id=newdemo1 class="tab-pane fade active in" style=display:block>
     <div class=row>
     <div id=profile class=col-xs-5 style="height: 340px;">
-    <h3 id=progress-text align=center>40/40</h3>
+    <h3 id=progress-text align=center>Mortgage Amount: $1,000,000</h3>
     
-    <div class=main>
-    <table id=tab1>
-    <tbody><tr>
-    <th>Age</th>
-    <td>28</td>
-    </tr>
-    <tr>
-    <th>Year of Education</th>
-    <td>13</td>
-    </tr>
-    <tr>
-    <th>Marital status</th>
-    <td>Married civilian spouse</td>
-    </tr>
-    <tr>
-    <th>Occupation</th>
-    <td>Executive Managerial</td>
-    </tr>
-    <tr>
-    <th>Work hours per week</th>
-    <td>46</td>
-    </tr>
-    </table>
+    <div class="main" id="profile_details" style="display: block;">
+        <table id=tab1>
+            <tbody><tr>
+            <th>Annual Income</th>
+            <td>$300,000</td>
+            </tr>
+            <tr>
+            <th>Education</th>
+            <td>Not Graduate</td>
+            </tr>
+            <tr>
+            <th>Mortgage Term</th>
+            <td>20 Years</td>
+            </tr>
+            <tr>
+            <th>Total Assets</th>
+            <td>$1,600,000</td>
+            </tr>
+            <tr>
+            <th>Self Employed</th>
+            <td>Yes</td>
+            </tr>
+        </table>
     </div>
     </div>
     
     <div class=col-xs-7>
     
     
-    <div class="container-fluid list-group-item list-group-item-warning" id=user_prediction_region style="height: 340px;">
-    <h3>Make your decision</h3>
-    
-    <p></p>
-    <form id=firstdecision1 class="container-fluid list-group-item list-group-item-light" style=display:block>
-    <li class="list-group-item list-group-item-light">
-    <div class=form-group>
-    <div style=display:inline-block>
-    <h4> 
-    What is your decision?
-    </h4>
-    </div>
-    <div class="form-check form-check-inline">
-    <input class=form-check-input type=radio name=firstdecision value=0 id=radio-first-decision-1>
-    <label class=form-check-label for=radio-first-decision-1>≤ 50k
-    </label>
-    </div>
-    
-    <div class="form-check form-check-inline">
-    <input class=form-check-input type=radio name=firstdecision value=1 id=radio-first-decision-2>
-    <label class=form-check-label for=radio-first-decision-2>&gt; 50k
-    </label>
-    </div>
-    
-    </div>
-    </li>
-    
-    
-    <button id=next-task type=button class="btn btn-primary" data-dismiss=modal> Finish and Next </button>
-    <li id=showanswer_area class="list-group-item list-group-item-light" style=display:none>
-    
-    </li></form>
-    </div>
+        <div class="container-fluid list-group-item list-group-item-warning" id="user_prediction_region" style="height: 340px;">
+            <h3>Choose your AI assistant, then make your decision</h3>
+        
+            <p></p>
+            <form id="decision" class="container-fluid list-group-item list-group-item-light" style="display: none;">
+                <li class="list-group-item list-group-item-light">
+                    <div class="form-group">
+                        <div style="display: inline-block;">
+                            <h4>
+                                What is your decision?
+                            </h4>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="firstdecision" value="0" id="reject-client">
+                            <label class="form-check-label" for="reject-client">Reject Client</label>
+                        </div>
+        
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="firstdecision" value="1" id="accept-client">
+                            <label class="form-check-label" for="accept-client">Accept Client</label>
+                        </div>
+                    </div>
+                </li>
+        
+                <!-- Buttons and Result Area -->
+                <div class="button-result-container" style="display: flex; align-items: center; margin-top: 10px;">
+                    <!-- Lock in Choice Button -->
+                    <button id="lock-in-choice" type="button" class="btn btn-primary" disabled>Lock in Choice</button>
+        
+                    <!-- Your Result Area -->
+                    <div id="your_result" style="margin-left: 10px; display: none; font-weight: bold;">
+                        <!-- Result will be displayed here -->
+                    </div>
+        
+                    <!-- Finish and Next Button -->
+                    <button id="next-task" type="button" class="btn btn-primary" data-dismiss="modal" style="margin-left: 10px; display: none;">Finish and Next</button>
+                </div>
+        
+                <li id="showanswer_area" class="list-group-item list-group-item-light" style="display: none;">
+                </li>
+            </form>
+        
+            <!-- Countdown Timer -->
+            <div id="countdown_timer" style="margin-left: 20px; margin-top: 20px; font-size: 20px; text-align: left; font-weight: bold; color: darkred;">
+                Time Remaining: 03:00
+            </div>
+        </div>
+        
+        
+        <script>
+            document.addEventListener("DOMContentLoaded", function () {
+                const timerElement = document.getElementById("countdown_timer");
+                let timeRemaining = 180; // 3 minutes in seconds
+                let countdownInterval; // Declare countdownInterval in a broader scope
+        
+                function updateTimerDisplay() {
+                    const minutes = Math.floor(timeRemaining / 60);
+                    const seconds = timeRemaining % 60;
+                    timerElement.textContent = `Time Remaining: ${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+                }
+        
+                function startCountdown() {
+                    countdownInterval = setInterval(() => {
+                        if (timeRemaining > 0) {
+                            timeRemaining--;
+                            updateTimerDisplay();
+                        } else {
+                            clearInterval(countdownInterval);
+                            timerElement.textContent = "Time's up!";
+                            // Optional: Trigger any additional actions here when the timer reaches 0
+                        }
+                    }, 1000); // Update every second
+                }
+        
+                // Initialize timer display and start countdown
+                updateTimerDisplay();
+                startCountdown();
+        
+                // Variables to hold user's choice and time
+                let subjects_choice;
+                let subjects_time;
+        
+                // Correct answer variable (set this to the correct value)
+                const correct_answer = "1"; // Replace with the actual correct answer ("0" or "1" as strings)
+        
+                // Get the Lock in Choice button
+                const lockInChoiceButton = document.getElementById("lock-in-choice");
+        
+                // Flag to indicate if choice has been locked
+                let choiceLocked = false;
+        
+                // Function to check if a radio button is selected
+                function checkRadioSelection() {
+                    if (choiceLocked) {
+                        // If choice is locked, do not re-enable the button
+                        return;
+                    }
+                    const radios = document.getElementsByName('firstdecision');
+                    for (const radio of radios) {
+                        if (radio.checked) {
+                            lockInChoiceButton.disabled = false; // Enable the button
+                            return;
+                        }
+                    }
+                    lockInChoiceButton.disabled = true; // Disable the button if none selected
+                }
+        
+                // Add event listeners to radio buttons
+                const radioButtons = document.getElementsByName('firstdecision');
+                for (const radio of radioButtons) {
+                    radio.addEventListener('change', checkRadioSelection);
+                }
+        
+                // Handle Lock in Choice button click
+                lockInChoiceButton.addEventListener("click", function () {
+                    if (choiceLocked) {
+                        // Prevent multiple clicks
+                        return;
+                    }
+                    choiceLocked = true; // Set the flag
+        
+                    // Stop the countdown timer
+                    clearInterval(countdownInterval);
+        
+                    // Record the value of the radio buttons
+                    subjects_choice = undefined;
+                    for (const radio of radioButtons) {
+                        if (radio.checked) {
+                            subjects_choice = radio.value;
+                            break;
+                        }
+                    }
+        
+                    // This check is redundant but kept for safety
+                    if (subjects_choice === undefined) {
+                        alert("Please make a selection before locking in your choice.");
+                        return;
+                    }
+        
+                    // Record the remaining time
+                    subjects_time = timeRemaining;
+        
+                    // Disable the Lock in Choice button
+                    lockInChoiceButton.disabled = true;
+        
+                    // Disable the radio buttons
+                    for (const radio of radioButtons) {
+                        radio.disabled = true;
+                    }
+        
+                    // Show the Finish and Next button and your_result area
+                    document.getElementById("next-task").style.display = "inline-block";
+                    document.getElementById("your_result").style.display = "inline-block";
+        
+                    // Compare subjects_choice with correct_answer
+                    if (subjects_choice === correct_answer) {
+                        document.getElementById("your_result").textContent = "Correct choice!";
+                    } else {
+                        document.getElementById("your_result").textContent = "Incorrect choice...";
+                    }
+        
+                    // Optionally, store subjects_choice and subjects_time for further processing
+                    // e.g., send to server or store in hidden form fields
+                    console.log("Subject's Choice:", subjects_choice);
+                    console.log("Time Remaining:", subjects_time);
+                });
+            });
+        </script>
+        
+        
+        
+
 </div>
-    <div class="list-group-item list-group-item-info" id=ai_suggestion_region style=display:block>
-    
-    <br>
-    <br>
-</div>
+
 </div> 
     <div id=wrap1 class="container-fluid list-group-item list-group-item-light">
     
@@ -184,8 +319,8 @@
             // Variables for the bot texts and videos
             const textbot_text = "Textbot: This is the prediction from the text-only bot.";
             const audiovideobot_text = "Audiobot/Videobot: This is the prediction from the audio or video bot.";
-            const audiobot_video = "https://vancuvrboy.github.io/CPEN541/AI_prediction.mp4"; // Replace with the actual path or URL
-            const videobot_video = "https://vancuvrboy.github.io/CPEN541/AI_prediction.mp4"; // Replace with the actual path or URL
+            const audiobot_video = "https://vancuvrboy.github.io/CPEN541/audiobot_prediction.mp4"; // Replace with the actual path or URL
+            const videobot_video = "https://vancuvrboy.github.io/CPEN541/videobot_prediction.mp4"; // Replace with the actual path or URL
           
             // Function to disable other buttons
             function disableOtherButtons(exceptButtonId) {
@@ -196,11 +331,22 @@
                 }
               });
             }
+
+            // Function to show the profile details container
+            function showProfileDetails() {
+                const profileDetails = document.getElementById("profile_details");
+                profileDetails.style.display = "block"; // Make the container visible
+                const decision = document.getElementById("decision");
+                decision.style.display = "block"; // Make the container visible
+            }
           
             // Textbot button click handler
             document.getElementById("textbot_btn").addEventListener("click", function() {
               // Disable other buttons
               disableOtherButtons('textbot_btn');
+
+                // Show the profile details container
+                showProfileDetails();
           
               // Hide the video and show placeholder
               const placeholder = document.getElementById("video_placeholder");
@@ -229,6 +375,9 @@
             document.getElementById("audiobot_btn").addEventListener("click", function() {
               // Disable other buttons
               disableOtherButtons('audiobot_btn');
+
+                // Show the profile details container
+                showProfileDetails();
           
               // Hide the placeholder text
               const placeholder = document.getElementById("video_placeholder");
@@ -263,6 +412,9 @@
             document.getElementById("videobot_btn").addEventListener("click", function() {
               // Disable other buttons
               disableOtherButtons('videobot_btn');
+
+                // Show the profile details container
+                showProfileDetails();
           
               // Hide the placeholder text
               const placeholder = document.getElementById("video_placeholder");
