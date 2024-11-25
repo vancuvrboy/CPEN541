@@ -55,29 +55,29 @@
     <div id=profile class=col-xs-5 style="height: 340px;">
     <h3 id=progress-text align=center>Mortgage Amount: $1,000,000</h3>
     
-    <div class=main>
-    <table id=tab1>
-    <tbody><tr>
-    <th>Age</th>
-    <td>28</td>
-    </tr>
-    <tr>
-    <th>Year of Education</th>
-    <td>13</td>
-    </tr>
-    <tr>
-    <th>Marital status</th>
-    <td>Married civilian spouse</td>
-    </tr>
-    <tr>
-    <th>Occupation</th>
-    <td>Executive Managerial</td>
-    </tr>
-    <tr>
-    <th>Work hours per week</th>
-    <td>46</td>
-    </tr>
-    </table>
+    <div class="main" id="profile_details" style="display: none;">
+        <table id=tab1>
+            <tbody><tr>
+            <th>Annual Income</th>
+            <td>$300,000</td>
+            </tr>
+            <tr>
+            <th>Education</th>
+            <td>Not Graduate</td>
+            </tr>
+            <tr>
+            <th>Mortgage Term</th>
+            <td>20 Years</td>
+            </tr>
+            <tr>
+            <th>Total Assets</th>
+            <td>$1,600,000</td>
+            </tr>
+            <tr>
+            <th>Self Employed</th>
+            <td>Yes</td>
+            </tr>
+        </table>
     </div>
     </div>
     
@@ -85,10 +85,10 @@
     
     
         <div class="container-fluid list-group-item list-group-item-warning" id="user_prediction_region" style="height: 340px;">
-            <h3>Make your decision</h3>
+            <h3>Choose your AI assistant, then make your decision</h3>
         
             <p></p>
-            <form id="firstdecision1" class="container-fluid list-group-item list-group-item-light" style="display: block;">
+            <form id="decision" class="container-fluid list-group-item list-group-item-light" style="display: none;">
                 <li class="list-group-item list-group-item-light">
                     <div class="form-group">
                         <div style="display: inline-block;">
@@ -225,11 +225,22 @@
                 }
               });
             }
+
+            // Function to show the profile details container
+            function showProfileDetails() {
+                const profileDetails = document.getElementById("profile_details");
+                profileDetails.style.display = "block"; // Make the container visible
+                const decision = document.getElementById("decision");
+                decision.style.display = "block"; // Make the container visible
+            }
           
             // Textbot button click handler
             document.getElementById("textbot_btn").addEventListener("click", function() {
               // Disable other buttons
               disableOtherButtons('textbot_btn');
+
+                // Show the profile details container
+                showProfileDetails();
           
               // Hide the video and show placeholder
               const placeholder = document.getElementById("video_placeholder");
@@ -258,6 +269,9 @@
             document.getElementById("audiobot_btn").addEventListener("click", function() {
               // Disable other buttons
               disableOtherButtons('audiobot_btn');
+
+                // Show the profile details container
+                showProfileDetails();
           
               // Hide the placeholder text
               const placeholder = document.getElementById("video_placeholder");
@@ -292,6 +306,9 @@
             document.getElementById("videobot_btn").addEventListener("click", function() {
               // Disable other buttons
               disableOtherButtons('videobot_btn');
+
+                // Show the profile details container
+                showProfileDetails();
           
               // Hide the placeholder text
               const placeholder = document.getElementById("video_placeholder");
