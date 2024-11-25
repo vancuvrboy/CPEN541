@@ -2,7 +2,7 @@
     Page saved with SingleFile 
     url: https://userstudy.link/HAIcollaboration/AIConfidence.html#traindemo1 
     saved date: Thu Nov 21 2024 23:11:44 GMT-0800 (Pacific Standard Time)
-   --><meta charset=utf-8><title>Human-AI Decision-Making</title><meta name=viewport content="width=device-width, initial-scale=1"><meta http-equiv=X-UA-Compatible content="ie=edge"><meta name=referrer content=no-referrer><link rel="shortcut icon" href=data:, data-sf-original-href=https://userstudy.link/HAIcollaboration/AIConfidence.html><style>.sf-hidden{display:none!important}</style><link rel=canonical href=https://userstudy.link/HAIcollaboration/AIConfidence.html#traindemo1><meta http-equiv=content-security-policy content="default-src 'none'; font-src 'self' data:; img-src 'self' data:; style-src 'unsafe-inline'; media-src 'self' data:; script-src 'unsafe-inline' data:; object-src 'self' data:; frame-src 'self' data:;"><body>
+   --><meta charset=utf-8><title>Human-AI Decision-Making</title><meta name=viewport content="width=device-width, initial-scale=1"><meta http-equiv=X-UA-Compatible content="ie=edge"><meta name=referrer content=no-referrer><link rel="shortcut icon" href=data:, data-sf-original-href=https://userstudy.link/HAIcollaboration/AIConfidence.html><style>.sf-hidden{display:none!important}</style><link rel=canonical href=https://userstudy.link/HAIcollaboration/AIConfidence.html#traindemo1><meta http-equiv=content-security-policy content="default-src 'self'; font-src 'self' data:; img-src 'self' data:; style-src 'unsafe-inline'; media-src 'self' data:; script-src 'unsafe-inline' data:; object-src 'self' data:; frame-src 'self' data:;connect-src 'self' https://script.google.com https://script.googleusercontent.com;"><body>
     
     <div class=container>
     <h2 id=title1>Human-AI Decision-Making <small> Making decisions with the assistance of AI</small></h2>
@@ -53,29 +53,29 @@
     <div id=newdemo1 class="tab-pane fade active in" style=display:block>
     <div class=row>
     <div id=profile class=col-xs-5 style="height: 340px;">
-    <h3 id=progress-text align=center>Mortgage Amount: $1,000,000</h3>
+    <h3 id=progress-text align=center>Mortgage Amount: Loading...</h3>
     
     <div class="main" id="profile_details" style="display: block;">
         <table id=tab1>
             <tbody><tr>
             <th>Annual Income</th>
-            <td>$300,000</td>
+            <td>Loading...</td>
             </tr>
             <tr>
             <th>Education</th>
-            <td>Not Graduate</td>
+            <td>Loading...</td>
             </tr>
             <tr>
             <th>Mortgage Term</th>
-            <td>20 Years</td>
+            <td>Loading...</td>
             </tr>
             <tr>
             <th>Total Assets</th>
-            <td>$1,600,000</td>
+            <td>Loading...</td>
             </tr>
             <tr>
             <th>Self Employed</th>
-            <td>Yes</td>
+            <td>Loading...</td>
             </tr>
         </table>
     </div>
@@ -134,6 +134,7 @@
         
         
         <script>
+            
             document.addEventListener("DOMContentLoaded", function () {
                 const timerElement = document.getElementById("countdown_timer");
                 let timeRemaining = 180; // 3 minutes in seconds
@@ -316,136 +317,332 @@
           
         
           <script>
-            // Variables for the bot texts and videos
+            // Global variables
             const textbot_text = "Textbot: This is the prediction from the text-only bot.";
             const audiovideobot_text = "Audiobot/Videobot: This is the prediction from the audio or video bot.";
-            const audiobot_video = "https://vancuvrboy.github.io/CPEN541/audiobot_prediction.mp4"; // Replace with the actual path or URL
-            const videobot_video = "https://vancuvrboy.github.io/CPEN541/videobot_prediction.mp4"; // Replace with the actual path or URL
-          
-            // Function to disable other buttons
+            const audiobot_video = "https://vancuvrboy.github.io/CPEN541/audiobot_prediction.mp4";
+            const videobot_video = "https://vancuvrboy.github.io/CPEN541/videobot_prediction.mp4";
+        
+            let subjects_choice;
+            let subjects_time;
+            let correct_answer; // Will be set after fetching data
+        
+            // Timer variables
+            let timerElement;
+            let timeRemaining = 180; // 3 minutes in seconds
+            let countdownInterval;
+        
+            // Functions used by AI buttons
             function disableOtherButtons(exceptButtonId) {
-              const buttons = ['textbot_btn', 'audiobot_btn', 'videobot_btn'];
-              buttons.forEach(function(buttonId) {
-                if (buttonId !== exceptButtonId) {
-                  document.getElementById(buttonId).disabled = true;
-                }
-              });
+                const buttons = ['textbot_btn', 'audiobot_btn', 'videobot_btn'];
+                buttons.forEach(function (buttonId) {
+                    if (buttonId !== exceptButtonId) {
+                        document.getElementById(buttonId).disabled = true;
+                    }
+                });
             }
-
-            // Function to show the profile details container
+        
             function showProfileDetails() {
                 const profileDetails = document.getElementById("profile_details");
                 profileDetails.style.display = "block"; // Make the container visible
                 const decision = document.getElementById("decision");
-                decision.style.display = "block"; // Make the container visible
+                decision.style.display = "block"; // Make the decision form visible
             }
-          
-            // Textbot button click handler
-            document.getElementById("textbot_btn").addEventListener("click", function() {
-              // Disable other buttons
-              disableOtherButtons('textbot_btn');
-
-                // Show the profile details container
-                showProfileDetails();
-          
-              // Hide the video and show placeholder
-              const placeholder = document.getElementById("video_placeholder");
-              placeholder.style.display = "block"; // Show placeholder
-              const video = document.getElementById("ai_video");
-              video.style.display = "none"; // Hide video
-              video.pause(); // Stop video if playing
-          
-              // Clear and start typing the text from textbot_text
-              const aiText = document.getElementById("ai_text");
-              aiText.textContent = ""; // Clear the text box before typing
-          
-              // Typing effect logic
-              let index = 0;
-              function typeCharacter() {
-                if (index < textbot_text.length) {
-                  aiText.textContent += textbot_text[index];
-                  index++;
-                  setTimeout(typeCharacter, 20); // Adjust typing speed here
+        
+            // Timer functions
+            function updateTimerDisplay() {
+                const minutes = Math.floor(timeRemaining / 60);
+                const seconds = timeRemaining % 60;
+                timerElement.textContent = `Time Remaining: ${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+            }
+        
+            function startCountdown() {
+                countdownInterval = setInterval(() => {
+                    if (timeRemaining > 0) {
+                        timeRemaining--;
+                        updateTimerDisplay();
+                    } else {
+                        clearInterval(countdownInterval);
+                        timerElement.textContent = "Time's up!";
+                        // Optional: Trigger any additional actions here when the timer reaches 0
+                    }
+                }, 1000); // Update every second
+            }
+        
+            // Function to extract query parameters
+            function getQueryParameter(param) {
+                var urlParams = new URLSearchParams(window.location.search);
+                return urlParams.get(param);
+            }
+        
+            // Function to fetch data from Google Apps Script
+            function fetchData() {
+                var next_challenge = getQueryParameter('next_challenge') || '1';
+                console.log('fetchData function is called.');
+                console.log('next_challenge:', next_challenge);
+        
+                var scriptURL = 'https://script.google.com/macros/s/AKfycbx_iZvLfmu3-DPt0UrXSg-Ytpejk1hxaT7OaJVVA7YOUMbG1b9UVoIdXyRPGXiExOXu/exec';
+        
+                fetch(scriptURL + '?next_challenge=' + next_challenge)
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('Network response was not OK');
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        console.log('Data received:', data);
+        
+                        if (data.error) {
+                            throw new Error(data.error);
+                        }
+        
+                        // Update the Mortgage Amount
+                        document.getElementById('progress-text').textContent = 'Mortgage Amount: $' + data['Mortgage'];
+        
+                        // Update the table of attributes
+                        var tableBody = document.querySelector('#tab1 tbody');
+                        tableBody.innerHTML = `
+                            <tr>
+                                <th>Annual Income</th>
+                                <td>$${data['Income']}</td>
+                            </tr>
+                            <tr>
+                                <th>Education</th>
+                                <td>${data['Education']}</td>
+                            </tr>
+                            <tr>
+                                <th>Mortgage Term</th>
+                                <td>${data['Term']} Years</td>
+                            </tr>
+                            <tr>
+                                <th>Total Assets</th>
+                                <td>$${data['Assets']}</td>
+                            </tr>
+                            <tr>
+                                <th>Self Employed</th>
+                                <td>${data['SEmployed']}</td>
+                            </tr>
+                        `;
+        
+                        // Set the correct_answer variable
+                        correct_answer = data['Approved'].toString();
+        
+                        // Start the countdown timer
+                        updateTimerDisplay();
+                        startCountdown();
+                    })
+                    .catch(error => {
+                        console.error('Error fetching data:', error);
+                        document.getElementById('progress-text').textContent = 'Error loading data';
+        
+                        // Display the error message on the page
+                        let errorMessageElement = document.getElementById('error-message');
+                        if (errorMessageElement) {
+                            errorMessageElement.textContent = error.message;
+                        } else {
+                            errorMessageElement = document.createElement('div');
+                            errorMessageElement.id = 'error-message';
+                            errorMessageElement.style.color = 'red';
+                            errorMessageElement.textContent = error.message;
+                            document.getElementById('progress-text').insertAdjacentElement('afterend', errorMessageElement);
+                        }
+                    });
+            }
+        
+            document.addEventListener("DOMContentLoaded", function () {
+                // Now that DOM is loaded, we can access DOM elements
+        
+                // Assign DOM elements
+                timerElement = document.getElementById("countdown_timer");
+                const lockInChoiceButton = document.getElementById("lock-in-choice");
+                const radioButtons = document.getElementsByName('firstdecision');
+                let choiceLocked = false;
+        
+                // Function to check if a radio button is selected
+                function checkRadioSelection() {
+                    if (choiceLocked) {
+                        return;
+                    }
+                    for (const radio of radioButtons) {
+                        if (radio.checked) {
+                            lockInChoiceButton.disabled = false;
+                            return;
+                        }
+                    }
+                    lockInChoiceButton.disabled = true;
                 }
-              }
-              typeCharacter(); // Start the typing effect
-            });
-          
-            // Audiobot button click handler
-            document.getElementById("audiobot_btn").addEventListener("click", function() {
-              // Disable other buttons
-              disableOtherButtons('audiobot_btn');
-
-                // Show the profile details container
-                showProfileDetails();
-          
-              // Hide the placeholder text
-              const placeholder = document.getElementById("video_placeholder");
-              placeholder.style.display = "none";
-          
-              // Update the video source to audiobot_video
-              const video = document.getElementById("ai_video");
-              const videoSource = document.getElementById("video_source");
-              videoSource.src = audiobot_video; // Set video source
-              video.load(); // Reload the video with the new source
-              video.style.display = "block"; // Show video
-              video.controls = false; // Ensure controls are disabled
-              video.play(); // Play the video
-          
-              // Clear and start typing the text from audiovideobot_text
-              const aiText = document.getElementById("ai_text");
-              aiText.textContent = ""; // Clear the text box before typing
-          
-              // Typing effect logic
-              let index = 0;
-              function typeCharacter() {
-                if (index < audiovideobot_text.length) {
-                  aiText.textContent += audiovideobot_text[index];
-                  index++;
-                  setTimeout(typeCharacter, 20); // Adjust typing speed here
+        
+                // Add event listeners to radio buttons
+                for (const radio of radioButtons) {
+                    radio.addEventListener('change', checkRadioSelection);
                 }
-              }
-              typeCharacter(); // Start the typing effect
+        
+                // Handle Lock in Choice button click
+                lockInChoiceButton.addEventListener("click", function () {
+                    if (choiceLocked) {
+                        return;
+                    }
+                    choiceLocked = true;
+        
+                    // Stop the countdown timer
+                    clearInterval(countdownInterval);
+        
+                    // Record the value of the radio buttons
+                    subjects_choice = undefined;
+                    for (const radio of radioButtons) {
+                        if (radio.checked) {
+                            subjects_choice = radio.value;
+                            break;
+                        }
+                    }
+        
+                    if (subjects_choice === undefined) {
+                        alert("Please make a selection before locking in your choice.");
+                        return;
+                    }
+        
+                    // Record the remaining time
+                    subjects_time = timeRemaining;
+        
+                    // Disable the Lock in Choice button
+                    lockInChoiceButton.disabled = true;
+        
+                    // Disable the radio buttons
+                    for (const radio of radioButtons) {
+                        radio.disabled = true;
+                    }
+        
+                    // Show the Finish and Next button and your_result area
+                    document.getElementById("next-task").style.display = "inline-block";
+                    document.getElementById("your_result").style.display = "inline-block";
+        
+                    // Compare subjects_choice with correct_answer
+                    if (subjects_choice === correct_answer) {
+                        document.getElementById("your_result").textContent = "Correct choice!";
+                    } else {
+                        document.getElementById("your_result").textContent = "Incorrect choice...";
+                    }
+        
+                    // Optionally, store subjects_choice and subjects_time for further processing
+                    console.log("Subject's Choice:", subjects_choice);
+                    console.log("Time Remaining:", subjects_time);
+                });
+        
+                // AI Button Event Listeners
+        
+                // Textbot button click handler
+                document.getElementById("textbot_btn").addEventListener("click", function () {
+                    // Disable other buttons
+                    disableOtherButtons('textbot_btn');
+        
+                    // Show the profile details container
+                    showProfileDetails();
+        
+                    // Hide the video and show placeholder
+                    const placeholder = document.getElementById("video_placeholder");
+                    placeholder.style.display = "block"; // Show placeholder
+                    const video = document.getElementById("ai_video");
+                    video.style.display = "none"; // Hide video
+                    video.pause(); // Stop video if playing
+        
+                    // Clear and start typing the text from textbot_text
+                    const aiText = document.getElementById("ai_text");
+                    aiText.textContent = ""; // Clear the text box before typing
+        
+                    // Typing effect logic
+                    let index = 0;
+                    function typeCharacter() {
+                        if (index < textbot_text.length) {
+                            aiText.textContent += textbot_text[index];
+                            index++;
+                            setTimeout(typeCharacter, 20); // Adjust typing speed here
+                        }
+                    }
+                    typeCharacter(); // Start the typing effect
+                });
+        
+                // Audiobot button click handler
+                document.getElementById("audiobot_btn").addEventListener("click", function () {
+                    // Disable other buttons
+                    disableOtherButtons('audiobot_btn');
+        
+                    // Show the profile details container
+                    showProfileDetails();
+        
+                    // Hide the placeholder text
+                    const placeholder = document.getElementById("video_placeholder");
+                    placeholder.style.display = "none";
+        
+                    // Update the video source to audiobot_video
+                    const video = document.getElementById("ai_video");
+                    const videoSource = document.getElementById("video_source");
+                    videoSource.src = audiobot_video; // Set video source
+                    video.load(); // Reload the video with the new source
+                    video.style.display = "block"; // Show video
+                    video.controls = false; // Ensure controls are disabled
+                    video.play(); // Play the video
+        
+                    // Clear and start typing the text from audiovideobot_text
+                    const aiText = document.getElementById("ai_text");
+                    aiText.textContent = ""; // Clear the text box before typing
+        
+                    // Typing effect logic
+                    let index = 0;
+                    function typeCharacter() {
+                        if (index < audiovideobot_text.length) {
+                            aiText.textContent += audiovideobot_text[index];
+                            index++;
+                            setTimeout(typeCharacter, 20); // Adjust typing speed here
+                        }
+                    }
+                    typeCharacter(); // Start the typing effect
+                });
+        
+                // Videobot button click handler
+                document.getElementById("videobot_btn").addEventListener("click", function () {
+                    // Disable other buttons
+                    disableOtherButtons('videobot_btn');
+        
+                    // Show the profile details container
+                    showProfileDetails();
+        
+                    // Hide the placeholder text
+                    const placeholder = document.getElementById("video_placeholder");
+                    placeholder.style.display = "none";
+        
+                    // Update the video source to videobot_video
+                    const video = document.getElementById("ai_video");
+                    const videoSource = document.getElementById("video_source");
+                    videoSource.src = videobot_video; // Set video source
+                    video.load(); // Reload the video with the new source
+                    video.style.display = "block"; // Show video
+                    video.controls = false; // Ensure controls are disabled
+                    video.play(); // Play the video
+        
+                    // Clear and start typing the text from audiovideobot_text
+                    const aiText = document.getElementById("ai_text");
+                    aiText.textContent = ""; // Clear the text box before typing
+        
+                    // Typing effect logic
+                    let index = 0;
+                    function typeCharacter() {
+                        if (index < audiovideobot_text.length) {
+                            aiText.textContent += audiovideobot_text[index];
+                            index++;
+                            setTimeout(typeCharacter, 20); // Adjust typing speed here
+                        }
+                    }
+                    typeCharacter(); // Start the typing effect
+                });
+        
+                // Call fetchData after DOM is ready and elements are assigned
+                fetchData();
             });
-          
-            // Videobot button click handler
-            document.getElementById("videobot_btn").addEventListener("click", function() {
-              // Disable other buttons
-              disableOtherButtons('videobot_btn');
-
-                // Show the profile details container
-                showProfileDetails();
-          
-              // Hide the placeholder text
-              const placeholder = document.getElementById("video_placeholder");
-              placeholder.style.display = "none";
-          
-              // Update the video source to videobot_video
-              const video = document.getElementById("ai_video");
-              const videoSource = document.getElementById("video_source");
-              videoSource.src = videobot_video; // Set video source
-              video.load(); // Reload the video with the new source
-              video.style.display = "block"; // Show video
-              video.controls = false; // Ensure controls are disabled
-              video.play(); // Play the video
-          
-              // Clear and start typing the text from audiovideobot_text
-              const aiText = document.getElementById("ai_text");
-              aiText.textContent = ""; // Clear the text box before typing
-          
-              // Typing effect logic
-              let index = 0;
-              function typeCharacter() {
-                if (index < audiovideobot_text.length) {
-                  aiText.textContent += audiovideobot_text[index];
-                  index++;
-                  setTimeout(typeCharacter, 20); // Adjust typing speed here
-                }
-              }
-              typeCharacter(); // Start the typing effect
-            });
-          </script>
-          
+        </script>
+        
+        
+        
         
         
           
