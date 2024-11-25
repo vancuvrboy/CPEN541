@@ -1,0 +1,11 @@
+loan_id,no_of_dependents,education,self_employed,income_annum,loan_amount,loan_term,assets_value,loan_status,Predicted_Loan_Status
+4268,1, Not Graduate, No,273333.3333333333,853333.3333333334,8,1920000.0, Approved,Rejected
+547,4, Not Graduate, Yes,440000.0,1473333.3333333333,6,2106666.6666666665, Approved,Approved
+790,2, Graduate, No,206666.66666666663,580000.0,18,1340000.0, Rejected,Rejected
+3650,4, Not Graduate, Yes,153333.33333333334,513333.3333333333,16,1266666.6666666667, Approved,Rejected
+2526,5, Not Graduate, Yes,260000.0,553333.3333333334,18,1366666.6666666667, Approved,Rejected
+1682,1, Not Graduate, No,520000.0,1660000.0,6,3086666.6666666665, Rejected,Approved
+2042,4, Not Graduate, Yes,246666.66666666663,793333.3333333334,18,1893333.3333333333, Approved,Rejected
+1627,4, Not Graduate, No,193333.33333333337,580000.0,6,1306666.6666666667, Rejected,Approved
+4085,0, Not Graduate, Yes,620000.0,1960000.0,10,4860000.0, Rejected,Approved
+1166,1, Not Graduate, Yes,360000.0,1380000.0,8,1686666.6666666667, Approved,Approved
