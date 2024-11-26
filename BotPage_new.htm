@@ -204,7 +204,10 @@
             let commission;
             let penalty;
             let total_score;
-            let next_challenge
+            let next_challenge;
+            let lockInChoiceButton;
+            let radioButtons;
+            let choiceLocked = false;
         
             // Timer variables
             let timerElement;
@@ -247,7 +250,22 @@
                         clearInterval(countdownInterval);
                         countdownInterval = null;
                         timerElement.textContent = "Time's up!";
-                        // Optional: Trigger any additional actions here when the timer reaches 0
+                        // Trigger additional actions here when the timer reaches 0
+                        subjects_time = 180; // Set the time to 180 seconds
+                        // Disable the Lock in Choice button
+                        lockInChoiceButton.disabled = true;
+                        // Disable the radio buttons
+                        for (const radio of radioButtons) {
+                            radio.disabled = true;
+                        }
+                        // Show the Finish and Next button and your_result area
+                        document.getElementById("next-task").style.display = "inline-block"; // Show the Finish and Next button
+                        document.getElementById("your_result").style.display = "inline-block"; // Show the your_result area
+                        document.getElementById("show_score").style.display = "inline-block"; // Show the show_score area
+                        document.getElementById("your_result").textContent = "Ran out of time!"; // Display the message
+                        document.getElementById("show_score").textContent = "Score: -$" + penalty; // Display the penalty
+                        total_score = parseInt(total_score) - penalty; // Deduct the penalty from the total score
+                        document.getElementById('total_score').textContent = 'Total Score: $' + total_score; // Update the total score
                     }
                 }, 1000); // Update every second
             }
@@ -377,11 +395,11 @@
         
             document.addEventListener("DOMContentLoaded", function () {
                 // Now that DOM is loaded, we can access DOM elements
-        
+                lockInChoiceButton = document.getElementById("lock-in-choice");
+                radioButtons = document.getElementsByName('firstdecision');
                 // Assign DOM elements
                 timerElement = document.getElementById("countdown_timer");
-                const lockInChoiceButton = document.getElementById("lock-in-choice");
-                const radioButtons = document.getElementsByName('firstdecision');
+
                 let choiceLocked = false;
         
                 // Function to check if a radio button is selected
@@ -470,7 +488,7 @@
         
                     // Optionally, store subjects_choice and subjects_time for further processing
                     console.log("Subject's Choice:", subjects_choice);
-                    console.log("Time Remaining:", subjects_time);
+                    console.log("Time Spent:", subjects_time);
                 });
         
                 // AI Button Event Listeners
