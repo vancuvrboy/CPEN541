@@ -228,18 +228,17 @@
 
             function updateLockInButtonState() {
             // Enable the button only if BOTH conditions are true
-            if (!choiceLocked) {
-                for (const radio of radioButtons) {
-                    if (radio.checked) {
-                        lockInChoiceButton.disabled = false;
-                        return;
+                if (!choiceLocked) {
+                    for (const radio of radioButtons) {
+                        if (radio.checked) {
+                            lockInChoiceButton.disabled = false;
+                            return;
+                        }
                     }
                 }
+                // Disable button if either condition fails
+                lockInChoiceButton.disabled = true;
             }
-
-    // Disable button if either condition fails
-    lockInChoiceButton.disabled = true;
-}
 
 
             function showProfileDetails() {
@@ -401,7 +400,7 @@
 
             // Function to handle page load events
             function pageloadEvents() {
-                total_score = getQueryParameter('total_score') || '10000'; // Default to '10000' if not provided
+                total_score = getQueryParameter('total_score') || '0'; // Default to '10000' if not provided
                 // update & display total score
                 document.getElementById('total_score_div').textContent = 'Total Score: $' + parseInt(total_score).toLocaleString();
                 next_challenge = getQueryParameter('next_challenge') || '1';
