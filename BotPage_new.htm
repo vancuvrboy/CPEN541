@@ -25,9 +25,9 @@
     <div id="attention" class="well" style="position: relative;">
         <b>ATTENTION:</b> During the whole experiment, please <b>DO NOT</b> refresh the browser. Otherwise, all data will be lost.
         <!-- Total score container -->
-        <div id="total_score" style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); font-weight: bold; color: black; display: block;">
+        <div id="total_score" style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); font-weight: bold; font-size: 20px; color: black; display: block;">
             <!-- Score will be displayed here -->
-            Total Score: 0
+            Total Score: Loading...
         </div>
     </div>
     
@@ -39,7 +39,7 @@
     <ul class=pager> <li>
     </li> </ul>
     <div class=progress>
-    <div id=progressbar1 class="progress-bar progress-bar-striped progress-bar-animated" role=progressbar aria-valuenow=75 aria-valuemin=0 aria-valuemax=100 style=width:97%>97%</div>
+    <div id=progressbar1 class="progress-bar progress-bar-striped progress-bar-animated" role=progressbar aria-valuenow=75 aria-valuemin=0 aria-valuemax=100 style=width:0%>0%</div>
     </div>
     </div>
     
@@ -193,16 +193,18 @@
         
           <script>
             // Global variables
-            const textbot_text = "Textbot: This is the prediction from the text-only bot.";
-            const audiovideobot_text = "Audiobot/Videobot: This is the prediction from the audio or video bot.";
-            const audiobot_video = "https://vancuvrboy.github.io/CPEN541/audiobot_prediction.mp4";
-            const videobot_video = "https://vancuvrboy.github.io/CPEN541/videobot_prediction.mp4";
+            let textbot_text;
+            let audiovideobot_text;
+            let audiobot_video;
+            let videobot_video;
         
             let subjects_choice;
             let subjects_time;
             let correct_answer; // Will be set after fetching data
             let commission;
             let penalty;
+            let total_score;
+            let next_challenge
         
             // Timer variables
             let timerElement;
@@ -258,9 +260,10 @@
         
             // Function to fetch data from Google Apps Script
             function fetchData() {
-                var next_challenge = getQueryParameter('next_challenge') || '1';
+
+
                 console.log('fetchData function is called.');
-                console.log('next_challenge:', next_challenge);
+
         
                 var scriptURL = 'https://script.google.com/macros/s/AKfycbx_iZvLfmu3-DPt0UrXSg-Ytpejk1hxaT7OaJVVA7YOUMbG1b9UVoIdXyRPGXiExOXu/exec';
         
@@ -277,17 +280,22 @@
                         if (data.error) {
                             throw new Error(data.error);
                         }
-        
+
+                        textbot_text = data['text_pred'];
+                        audiovideobot_text = data['av_pred'];
+                        audiobot_video = "https://vancuvrboy.github.io/CPEN541/" + data['audio_url'];
+                        videobot_video = "https://vancuvrboy.github.io/CPEN541/" + data['video_url'];
+
                         // Update the Mortgage Amount
                         document.getElementById('mortgage').textContent = 'Mortgage Amount: $' + data['Mortgage'];
 
                         // calculate commission (1% of mortgage amount)
-                        commission = data['Mortgage'] * 0.01;
+                        commission = Math.round(data['Mortgage'] * 0.01);
                         // Update the commission
                         document.getElementById('commission').textContent = 'Commission Amount: +$' + commission;
 
                         // calculate the penalty (0.5% of mortgage amount)
-                        penalty = data['Mortgage'] * 0.005;
+                        penalty = Math.round(data['Mortgage'] * 0.005);
                         // Update the penalty
                         document.getElementById('penalty').textContent = 'Penalty Amount: -$' + penalty;
 
@@ -344,6 +352,28 @@
                         }
                     });
             }
+
+            // Function to handle page load events
+            function pageloadEvents() {
+                total_score = getQueryParameter('total_score') || '10000'; // Default to '10000' if not provided
+                // update & display total score
+                document.getElementById('total_score').textContent = 'Total Score: $' + total_score;
+                next_challenge = getQueryParameter('next_challenge') || '1';
+                // Ensure next_challenge is between 1 and 15
+                const maxChallenges = 15;
+                const challengeValue = Math.min(Math.max(next_challenge, 1), maxChallenges);
+
+                // Calculate the progress percentage
+                const progressPercentage = (challengeValue / maxChallenges) * 100;
+
+                // Update the progress bar width and text
+                const progressBar = document.getElementById('progressbar1');
+                progressBar.style.width = `${progressPercentage}%`;
+                progressBar.setAttribute('aria-valuenow', progressPercentage.toFixed(0));
+                progressBar.innerText = `${progressPercentage.toFixed(0)}%`;
+            }
+
+            document.addEventListener('DOMContentLoaded', pageloadEvents);
         
             document.addEventListener("DOMContentLoaded", function () {
                 // Now that DOM is loaded, we can access DOM elements
@@ -421,6 +451,9 @@
                         // if the choice was accepted, add the commission to the score
                         if (subjects_choice == 1) {
                             document.getElementById("show_score").textContent = "Score: +$" + commission;
+                            // update the total score
+                            total_score = parseInt(total_score) + commission;
+                            document.getElementById('total_score').textContent = 'Total Score: $' + total_score;
                         }
                         // if the choice was rejected, then add 0 to the score
                         else {
@@ -430,6 +463,9 @@
                         document.getElementById("your_result").textContent = "Incorrect choice...";
                         // if you are wrong, deduct the penalty from the score
                         document.getElementById("show_score").textContent = "Score: -$" + penalty;
+                        // update the total score
+                        total_score = parseInt(total_score) - penalty;
+                        document.getElementById('total_score').textContent = 'Total Score: $' + total_score;
                     }
         
                     // Optionally, store subjects_choice and subjects_time for further processing
