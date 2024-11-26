@@ -23,7 +23,11 @@
     <h2 id=title1>Human-AI Decision-Making <small> Making decisions with the assistance of AI</small></h2>
     
     <div id=attention class=well>
-    <b>ATTENTION:</b> During the whole experiment, please <b>DO NOT</b> refresh the browser. Otherwise, all data will be lost. 
+        <b>ATTENTION:</b> During the whole experiment, please <b>DO NOT</b> refresh the browser. Otherwise, all data will be lost.
+        <!-- Display Total Score -->
+        <div id="total_score" style="margin-left: 10px; display: none; font-weight: bold;">
+            <!-- Result will be displayed here -->
+        </div>
     </div>
     
     <div class=tab-content>
@@ -40,7 +44,9 @@
     <div id=newdemo1 class="tab-pane fade active in" style=display:block>
     <div class=row>
     <div id=profile class=col-xs-5 style="height: 340px;">
-    <h3 id=progress-text align=center>Mortgage Amount: Loading...</h3>
+    <h3 id=mortgage align=center>Mortgage Amount: Loading...</h3>
+    <h5 id=commission align=center>Commission Amount: Loading...</h5>
+    <h5 id=penalty align=center>Penalty Amount: Loading...</h5>
     
     <div class="main" id="profile_details" style="display: block;">
         <table id=tab1>
@@ -104,9 +110,15 @@
                     <div id="your_result" style="margin-left: 10px; display: none; font-weight: bold;">
                         <!-- Result will be displayed here -->
                     </div>
+
+                    <!-- Show $ added to score -->
+                    <div id="show_score" style="margin-left: 10px; display: none; font-weight: bold;">
+                        <!-- Score will be displayed here -->
+                    </div>
         
                     <!-- Finish and Next Button -->
                     <button id="next-task" type="button" class="btn btn-primary" data-dismiss="modal" style="margin-left: 10px; display: none;">Finish and Next</button>
+
                 </div>
         
                 <li id="showanswer_area" class="list-group-item list-group-item-light" style="display: none;">
@@ -187,6 +199,8 @@
             let subjects_choice;
             let subjects_time;
             let correct_answer; // Will be set after fetching data
+            let commission;
+            let penalty;
         
             // Timer variables
             let timerElement;
@@ -242,7 +256,7 @@
         
             // Function to fetch data from Google Apps Script
             function fetchData() {
-                var next_challenge = getQueryParameter('next_challenge') || '1';
+                var total_score = getQueryParameter('total_score') || '0';
                 console.log('fetchData function is called.');
                 console.log('next_challenge:', next_challenge);
         
@@ -263,7 +277,18 @@
                         }
         
                         // Update the Mortgage Amount
-                        document.getElementById('progress-text').textContent = 'Mortgage Amount: $' + data['Mortgage'];
+                        document.getElementById('mortgage').textContent = 'Mortgage Amount: $' + data['Mortgage'];
+
+                        // calculate commission (1% of mortgage amount)
+                        commission = data['Mortgage'] * 0.01;
+                        // Update the commission
+                        document.getElementById('commission').textContent = 'Commission Amount: +$' + commission;
+
+                        // calculate the penalty (0.5% of mortgage amount)
+                        penalty = data['Mortgage'] * 0.005;
+                        // Update the penalty
+                        document.getElementById('penalty').textContent = 'Penalty Amount: -$' + penalty;
+
         
                         // Update the table of attributes
                         var tableBody = document.querySelector('#tab1 tbody');
@@ -370,9 +395,10 @@
                         alert("Please make a selection before locking in your choice.");
                         return;
                     }
-        
-                    // Record the remaining time
-                    subjects_time = timeRemaining;
+
+
+                    // record the time it took the subject to click the lock in choice button
+                    subjects_time = 180 - timeRemaining;
         
                     // Disable the Lock in Choice button
                     lockInChoiceButton.disabled = true;
@@ -385,12 +411,23 @@
                     // Show the Finish and Next button and your_result area
                     document.getElementById("next-task").style.display = "inline-block";
                     document.getElementById("your_result").style.display = "inline-block";
+                    document.getElementById("show_score").style.display = "inline-block";
         
                     // Compare subjects_choice with correct_answer
                     if (subjects_choice === correct_answer) {
                         document.getElementById("your_result").textContent = "Correct choice!";
+                        // if the choice was accepted, add the commission to the score
+                        if (subjects_choice == 1) {
+                            document.getElementById("show_score").textContent = "Score: +$" + commission;
+                        }
+                        // if the choice was rejected, then add 0 to the score
+                        else {
+                            document.getElementById("show_score").textContent = "Score: +$0";
+                        }
                     } else {
                         document.getElementById("your_result").textContent = "Incorrect choice...";
+                        // if you are wrong, deduct the penalty from the score
+                        document.getElementById("show_score").textContent = "Score: -$" + penalty;
                     }
         
                     // Optionally, store subjects_choice and subjects_time for further processing
@@ -507,6 +544,13 @@
         
                 // Call fetchData after DOM is ready and elements are assigned
                 fetchData();
+
+                // display total score from querystring
+                var total_score = getQueryParameter('total_score') || '10000';
+                if (total_score) {
+                    document.getElementById('total_score').textContent = 'Total Score: $' + total_score;
+                    document.getElementById('total_score').style.display = 'block';
+                }
             });
         </script>
 
