@@ -25,7 +25,7 @@
     <div id="attention" class="well" style="position: relative;">
         <b>ATTENTION:</b> During the whole experiment, please <b>DO NOT</b> refresh the browser. Otherwise, all data will be lost.
         <!-- Total score container -->
-        <div id="total_score" style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); font-weight: bold; font-size: 20px; color: black; display: block;">
+        <div id="total_score_div" style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); font-weight: bold; font-size: 20px; color: black; display: block;">
             <!-- Score will be displayed here -->
             Total Score: Loading...
         </div>
@@ -203,11 +203,13 @@
             let correct_answer; // Will be set after fetching data
             let commission;
             let penalty;
-            let total_score;
+            let total_score; // Total score as a string
             let next_challenge;
             let lockInChoiceButton;
             let radioButtons;
             let choiceLocked = false;
+            let total_score_new; // Updated total score after each decision
+            let participantId;
         
             // Timer variables
             let timerElement;
@@ -251,6 +253,8 @@
                         countdownInterval = null;
                         timerElement.textContent = "Time's up!";
                         // Trigger additional actions here when the timer reaches 0
+                        // Show the profile details container
+                        showProfileDetails();
                         subjects_time = 180; // Set the time to 180 seconds
                         // Disable the Lock in Choice button
                         lockInChoiceButton.disabled = true;
@@ -263,9 +267,9 @@
                         document.getElementById("your_result").style.display = "inline-block"; // Show the your_result area
                         document.getElementById("show_score").style.display = "inline-block"; // Show the show_score area
                         document.getElementById("your_result").textContent = "Ran out of time!"; // Display the message
-                        document.getElementById("show_score").textContent = "Score: -$" + penalty; // Display the penalty
-                        total_score = parseInt(total_score) - penalty; // Deduct the penalty from the total score
-                        document.getElementById('total_score').textContent = 'Total Score: $' + total_score; // Update the total score
+                        document.getElementById("show_score").textContent = "Score: -$" + penalty.toLocaleString(); // Display the penalty
+                        total_score_new = parseInt(total_score) - penalty; // Deduct the penalty from the total score
+                        document.getElementById('total_score_div').textContent = 'Total Score: $' + total_score_new.toLocaleString(); // Update the total score
                     }
                 }, 1000); // Update every second
             }
@@ -281,6 +285,10 @@
 
 
                 console.log('fetchData function is called.');
+                console.log('in fetchdata: Next Challenge:', next_challenge);
+                console.log('in fetchdata: Total Score:', total_score);
+                console.log('in fetchdata: Participant ID:', participantId);
+                
 
         
                 var scriptURL = 'https://script.google.com/macros/s/AKfycbx_iZvLfmu3-DPt0UrXSg-Ytpejk1hxaT7OaJVVA7YOUMbG1b9UVoIdXyRPGXiExOXu/exec';
@@ -293,11 +301,13 @@
                         return response.json();
                     })
                     .then(data => {
-                        console.log('Data received:', data);
+                        console.log('before error check: Data received:', data);
+                        
         
                         if (data.error) {
                             throw new Error(data.error);
                         }
+                        console.log('after error check: Data received:', data);
 
                         textbot_text = data['text_pred'];
                         audiovideobot_text = data['av_pred'];
@@ -305,17 +315,17 @@
                         videobot_video = "https://vancuvrboy.github.io/CPEN541/" + data['video_url'];
 
                         // Update the Mortgage Amount
-                        document.getElementById('mortgage').textContent = 'Mortgage Amount: $' + data['Mortgage'];
+                        document.getElementById('mortgage').textContent = 'Mortgage Amount: $' + data['Mortgage'].toLocaleString();
 
                         // calculate commission (1% of mortgage amount)
                         commission = Math.round(data['Mortgage'] * 0.01);
                         // Update the commission
-                        document.getElementById('commission').textContent = 'Commission Amount: +$' + commission;
+                        document.getElementById('commission').textContent = 'Commission Amount: +$' + commission.toLocaleString();
 
                         // calculate the penalty (0.5% of mortgage amount)
                         penalty = Math.round(data['Mortgage'] * 0.005);
                         // Update the penalty
-                        document.getElementById('penalty').textContent = 'Penalty Amount: -$' + penalty;
+                        document.getElementById('penalty').textContent = 'Penalty Amount: -$' + penalty.toLocaleString();
 
         
                         // Update the table of attributes
@@ -323,7 +333,7 @@
                         tableBody.innerHTML = `
                             <tr>
                                 <th>Annual Income</th>
-                                <td>$${data['Income']}</td>
+                                <td>$${data['Income'].toLocaleString()}</td>
                             </tr>
                             <tr>
                                 <th>Education</th>
@@ -335,7 +345,7 @@
                             </tr>
                             <tr>
                                 <th>Total Assets</th>
-                                <td>$${data['Assets']}</td>
+                                <td>$${data['Assets'].toLocaleString()}</td>
                             </tr>
                             <tr>
                                 <th>Self Employed</th>
@@ -375,7 +385,7 @@
             function pageloadEvents() {
                 total_score = getQueryParameter('total_score') || '10000'; // Default to '10000' if not provided
                 // update & display total score
-                document.getElementById('total_score').textContent = 'Total Score: $' + total_score;
+                document.getElementById('total_score_div').textContent = 'Total Score: $' + parseInt(total_score).toLocaleString();
                 next_challenge = getQueryParameter('next_challenge') || '1';
                 // Ensure next_challenge is between 1 and 15
                 const maxChallenges = 15;
@@ -389,6 +399,11 @@
                 progressBar.style.width = `${progressPercentage}%`;
                 progressBar.setAttribute('aria-valuenow', progressPercentage.toFixed(0));
                 progressBar.innerText = `${progressPercentage.toFixed(0)}%`;
+                // get participantId from the query string
+                participantId = getQueryParameter('participantId') || 'P1234'; // Default to 'P1234' if not provided
+                console.log('New Page: Participant ID:', participantId);
+                console.log('New Page: Total Score:', total_score);
+                console.log('New Page: Next Challenge:', next_challenge);
             }
 
             document.addEventListener('DOMContentLoaded', pageloadEvents);
@@ -420,6 +435,17 @@
                 for (const radio of radioButtons) {
                     radio.addEventListener('change', checkRadioSelection);
                 }
+
+                // next-task button click handler
+                document.getElementById("next-task").addEventListener("click", function () {
+                    // Redirect to the next challenge
+                    // log the variables to the console
+                    console.log("F&N pushed: Participant ID:", participantId);
+                    console.log("F&N pushed: Total Score:", total_score_new);
+                    console.log("F&N pushed: Next Challenge:", parseInt(next_challenge) + 1);
+                    // redirect to the next challenge
+                    window.location.href = `https://vancuvrboy.github.io/CPEN541/BotPage_new.htm?participantId=${participantId}&total_score=${total_score_new}&next_challenge=${parseInt(next_challenge) + 1}`;
+                });
         
                 // Handle Lock in Choice button click
                 lockInChoiceButton.addEventListener("click", function () {
@@ -427,6 +453,8 @@
                         return;
                     }
                     choiceLocked = true;
+
+                    console.log("1. Lock in Choice clicked: Subject's Choice:", subjects_choice);
         
                     // Stop the countdown timer
                     clearInterval(countdownInterval);
@@ -446,6 +474,7 @@
                         return;
                     }
 
+                    console.log("2. Lock in Choice clicked: Subject's Choice:", subjects_choice);
 
                     // record the time it took the subject to click the lock in choice button
                     subjects_time = 180 - timeRemaining;
@@ -462,33 +491,39 @@
                     document.getElementById("next-task").style.display = "inline-block";
                     document.getElementById("your_result").style.display = "inline-block";
                     document.getElementById("show_score").style.display = "inline-block";
-        
+
+                    console.log("3. Lock in Choice clicked: Subject's Choice:", subjects_choice);
+
                     // Compare subjects_choice with correct_answer
                     if (subjects_choice === correct_answer) {
                         document.getElementById("your_result").textContent = "Correct choice!";
                         // if the choice was accepted, add the commission to the score
                         if (subjects_choice == 1) {
-                            document.getElementById("show_score").textContent = "Score: +$" + commission;
+                            document.getElementById("show_score").textContent = "Score: +$" + commission.toLocaleString();
                             // update the total score
-                            total_score = parseInt(total_score) + commission;
-                            document.getElementById('total_score').textContent = 'Total Score: $' + total_score;
+                            total_score_new = parseInt(total_score) + commission;
+                            document.getElementById('total_score_div').textContent = 'Total Score: $' + total_score_new.toLocaleString();
                         }
                         // if the choice was rejected, then add 0 to the score
                         else {
                             document.getElementById("show_score").textContent = "Score: +$0";
+                            total_score_new = parseInt(total_score);
                         }
                     } else {
                         document.getElementById("your_result").textContent = "Incorrect choice...";
                         // if you are wrong, deduct the penalty from the score
-                        document.getElementById("show_score").textContent = "Score: -$" + penalty;
+                        document.getElementById("show_score").textContent = "Score: -$" + penalty.toLocaleString();
                         // update the total score
-                        total_score = parseInt(total_score) - penalty;
-                        document.getElementById('total_score').textContent = 'Total Score: $' + total_score;
+                        total_score_new = parseInt(total_score) - penalty;
+                        document.getElementById('total_score_div').textContent = 'Total Score: $' + total_score_new.toLocaleString();
                     }
         
                     // Optionally, store subjects_choice and subjects_time for further processing
-                    console.log("Subject's Choice:", subjects_choice);
-                    console.log("Time Spent:", subjects_time);
+                    console.log("F&N shown: Subject's Choice:", subjects_choice);
+                    console.log("F&N shown: Time Spent:", subjects_time);
+                    console.log("F&N shown: Participant ID:", participantId);
+                    console.log("F&N shown: Total Score:", total_score_new);
+                    console.log("F&N shown: Next Challenge:", parseInt(next_challenge) + 1);
                 });
         
                 // AI Button Event Listeners
@@ -608,6 +643,10 @@
                     }
                 });
         
+                console.log('DOMContentLoaded event listener is called.');
+                console.log('before fetchdata: Next Challenge:', next_challenge);
+                console.log('before fetchdata: Total Score:', total_score);
+                console.log('before fetchdata: Participant ID:', participantId);
                 // Call fetchData after DOM is ready and elements are assigned
                 fetchData();
             });
