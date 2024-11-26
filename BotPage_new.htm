@@ -23,11 +23,7 @@
     <h2 id=title1>Human-AI Decision-Making <small> Making decisions with the assistance of AI</small></h2>
     
     <div id=attention class=well>
-        <b>ATTENTION:</b> During the whole experiment, please <b>DO NOT</b> refresh the browser. Otherwise, all data will be lost.
-        <!-- Display Total Score -->
-        <div id="total_score" style="margin-left: 10px; display: none; font-weight: bold;">
-            <!-- Result will be displayed here -->
-        </div>
+    <b>ATTENTION:</b> During the whole experiment, please <b>DO NOT</b> refresh the browser. Otherwise, all data will be lost.
     </div>
     
     <div class=tab-content>
@@ -256,7 +252,7 @@
         
             // Function to fetch data from Google Apps Script
             function fetchData() {
-                var total_score = getQueryParameter('total_score') || '0';
+                var next_challenge = getQueryParameter('next_challenge') || '1';
                 console.log('fetchData function is called.');
                 console.log('next_challenge:', next_challenge);
         
@@ -544,13 +540,6 @@
         
                 // Call fetchData after DOM is ready and elements are assigned
                 fetchData();
-
-                // display total score from querystring
-                var total_score = getQueryParameter('total_score') || '10000';
-                if (total_score) {
-                    document.getElementById('total_score').textContent = 'Total Score: $' + total_score;
-                    document.getElementById('total_score').style.display = 'block';
-                }
             });
         </script>
 
