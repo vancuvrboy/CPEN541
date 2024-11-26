@@ -133,7 +133,7 @@
         </div>
         
         
-        <script>
+     <!--<script>
             
             document.addEventListener("DOMContentLoaded", function () {
                 const timerElement = document.getElementById("countdown_timer");
@@ -252,7 +252,7 @@
                     console.log("Time Remaining:", subjects_time);
                 });
             });
-        </script>
+        </script>-->
         
         
         
@@ -329,7 +329,7 @@
         
             // Timer variables
             let timerElement;
-            let timeRemaining = 180; // 3 minutes in seconds
+            let timeRemaining;
             let countdownInterval;
         
             // Functions used by AI buttons
@@ -357,12 +357,16 @@
             }
         
             function startCountdown() {
+                if (countdownInterval) {
+                    clearInterval(countdownInterval);
+                }
                 countdownInterval = setInterval(() => {
                     if (timeRemaining > 0) {
                         timeRemaining--;
                         updateTimerDisplay();
                     } else {
                         clearInterval(countdownInterval);
+                        countdownInterval = null;
                         timerElement.textContent = "Time's up!";
                         // Optional: Trigger any additional actions here when the timer reaches 0
                     }
@@ -428,6 +432,9 @@
                         // Set the correct_answer variable
                         correct_answer = data['Approved'].toString();
         
+                        // Initialize the timer
+                        timeRemaining = 180; // 3 minutes in seconds
+        
                         // Start the countdown timer
                         updateTimerDisplay();
                         startCountdown();
@@ -487,6 +494,7 @@
         
                     // Stop the countdown timer
                     clearInterval(countdownInterval);
+                    countdownInterval = null;
         
                     // Record the value of the radio buttons
                     subjects_choice = undefined;
@@ -640,6 +648,7 @@
                 fetchData();
             });
         </script>
+        
         
         
         
