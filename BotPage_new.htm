@@ -197,7 +197,7 @@
             let audiovideobot_text;
             let audiobot_video;
             let videobot_video;
-        
+            let text_played = false; // text plays only once because buffer seems to overflow if clicked whcih playing
             let subjects_choice;
             let subjects_time;
             let correct_answer; // Will be set after fetching data
@@ -492,7 +492,6 @@
         
                     // Clear and start typing the text from textbot_text
                     const aiText = document.getElementById("ai_text");
-                    aiText.textContent = ""; // Clear the text box before typing
         
                     // Typing effect logic
                     let index = 0;
@@ -503,7 +502,11 @@
                             setTimeout(typeCharacter, 20); // Adjust typing speed here
                         }
                     }
-                    typeCharacter(); // Start the typing effect
+                    if (!text_played) {
+                        aiText.textContent = ""; // Clear the text box before typing
+                        typeCharacter(); // Start the typing effect
+                        text_played = true;
+                    }
                 });
         
                 // Audiobot button click handler
@@ -529,7 +532,6 @@
         
                     // Clear and start typing the text from audiovideobot_text
                     const aiText = document.getElementById("ai_text");
-                    aiText.textContent = ""; // Clear the text box before typing
         
                     // Typing effect logic
                     let index = 0;
@@ -540,7 +542,11 @@
                             setTimeout(typeCharacter, 20); // Adjust typing speed here
                         }
                     }
-                    typeCharacter(); // Start the typing effect
+                    if (!text_played) {
+                        aiText.textContent = ""; // Clear the text box before typing
+                        typeCharacter(); // Start the typing effect
+                        text_played = true;
+                    }
                 });
         
                 // Videobot button click handler
@@ -566,7 +572,7 @@
         
                     // Clear and start typing the text from audiovideobot_text
                     const aiText = document.getElementById("ai_text");
-                    aiText.textContent = ""; // Clear the text box before typing
+
         
                     // Typing effect logic
                     let index = 0;
@@ -577,7 +583,11 @@
                             setTimeout(typeCharacter, 20); // Adjust typing speed here
                         }
                     }
-                    typeCharacter(); // Start the typing effect
+                    if (!text_played) {
+                        aiText.textContent = ""; // Clear the text box before typing
+                        typeCharacter(); // Start the typing effect
+                        text_played = true;
+                    }
                 });
         
                 // Call fetchData after DOM is ready and elements are assigned
