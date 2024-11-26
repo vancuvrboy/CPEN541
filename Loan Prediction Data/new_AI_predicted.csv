@@ -1,16 +1,15 @@
 loan_id,no_of_dependents,education,self_employed,income_annum,loan_amount,loan_term,assets_value,loan_status,Predicted_Loan_Status
-2578,1, Graduate, Yes,326666.6666666667,1100000.0,12,1760000.0, Rejected,Rejected
-295,0, Graduate, No,586666.6666666666,1346666.6666666667,4,4206666.666666667, Rejected,Rejected
-227,3, Not Graduate, Yes,393333.3333333333,1373333.3333333333,10,2273333.3333333335, Approved,Approved
-1524,2, Graduate, No,406666.6666666667,1573333.3333333333,2,2253333.3333333335, Approved,Approved
-803,0, Graduate, No,120000.0,360000.0,16,906666.6666666666, Approved,Rejected
-4238,0, Not Graduate, No,606666.6666666666,2006666.6666666667,8,4026666.6666666665, Rejected,Approved
-406,2, Not Graduate, Yes,120000.0,380000.0,4,786666.6666666666, Approved,Approved
-4129,5, Not Graduate, Yes,453333.3333333333,1520000.0,14,3053333.3333333335, Rejected,Approved
-1830,1, Not Graduate, Yes,200000.0,400000.0,16,1400000.0, Rejected,Rejected
-852,1, Not Graduate, No,326666.6666666667,1233333.3333333333,4,2086666.6666666667, Approved,Approved
-2216,4, Graduate, Yes,340000.0,1046666.6666666666,6,2820000.0, Approved,Approved
-4175,4, Not Graduate, No,266666.6666666667,1006666.6666666666,8,2146666.6666666665, Approved,Approved
-3470,3, Graduate, Yes,320000.0,766666.6666666666,12,2173333.3333333335, Rejected,Rejected
-905,2, Graduate, No,273333.3333333333,993333.3333333334,12,1433333.3333333333, Approved,Approved
-2440,2, Graduate, No,306666.6666666667,1000000.0,4,1946666.6666666667, Approved,Approved
+295,0, Graduate, No,585000,1350000,4,4200000, Rejected,Rejected
+227,3, Not Graduate, Yes,395000,1350000,10,2300000, Approved,Approved
+1524,2, Graduate, No,405000,1550000,2,2300000, Approved,Approved
+803,0, Graduate, No,120000,350000,16,900000, Approved,Rejected
+4238,0, Not Graduate, No,605000,2000000,8,4000000, Rejected,Approved
+406,2, Not Graduate, Yes,120000,400000,4,800000, Approved,Approved
+4129,5, Not Graduate, Yes,455000,1500000,14,3100000, Rejected,Approved
+1830,1, Not Graduate, Yes,200000,400000,16,1400000, Rejected,Rejected
+852,1, Not Graduate, No,325000,1250000,4,2100000, Approved,Approved
+2216,4, Graduate, Yes,340000,1050000,6,2800000, Approved,Approved
+4175,4, Not Graduate, No,265000,1000000,8,2100000, Approved,Approved
+1166,1, Not Graduate, Yes,360000,1400000,8,1700000, Approved,Approved
+3470,3, Graduate, Yes,320000,750000,12,2200000, Rejected,Rejected
+905,2, Graduate, No,275000,1000000,12,1400000, Approved,Approved
