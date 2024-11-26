@@ -207,7 +207,7 @@
             let next_challenge;
             let lockInChoiceButton;
             let radioButtons;
-            let choiceLocked = false;
+            let choiceLocked = true;
             let total_score_new; // Updated total score after each decision
             let participantId;
         
@@ -225,7 +225,23 @@
                     }
                 });
             }
-        
+
+            function updateLockInButtonState() {
+            // Enable the button only if BOTH conditions are true
+            if (!choiceLocked) {
+                for (const radio of radioButtons) {
+                    if (radio.checked) {
+                        lockInChoiceButton.disabled = false;
+                        return;
+                    }
+                }
+            }
+
+    // Disable button if either condition fails
+    lockInChoiceButton.disabled = true;
+}
+
+
             function showProfileDetails() {
                 const profileDetails = document.getElementById("profile_details");
                 profileDetails.style.display = "block"; // Make the container visible
@@ -288,7 +304,7 @@
                 console.log('in fetchdata: Next Challenge:', next_challenge);
                 console.log('in fetchdata: Total Score:', total_score);
                 console.log('in fetchdata: Participant ID:', participantId);
-                
+
 
         
                 var scriptURL = 'https://script.google.com/macros/s/AKfycbx_iZvLfmu3-DPt0UrXSg-Ytpejk1hxaT7OaJVVA7YOUMbG1b9UVoIdXyRPGXiExOXu/exec';
@@ -362,6 +378,8 @@
                         // Start the countdown timer
                         updateTimerDisplay();
                         startCountdown();
+                        choiceLocked = false; // Enable the choice lock button
+                        updateLockInButtonState(); // Update button based on new state
                     })
                     .catch(error => {
                         console.error('Error fetching data:', error);
@@ -415,26 +433,33 @@
                 // Assign DOM elements
                 timerElement = document.getElementById("countdown_timer");
 
-                let choiceLocked = false;
+                // Ensure button is initially disabled
+                // lockInChoiceButton.disabled = true;
         
                 // Function to check if a radio button is selected
-                function checkRadioSelection() {
-                    if (choiceLocked) {
-                        return;
-                    }
-                    for (const radio of radioButtons) {
-                        if (radio.checked) {
-                            lockInChoiceButton.disabled = false;
-                            return;
-                        }
-                    }
-                    lockInChoiceButton.disabled = true;
-                }
+                // function checkRadioSelection() {
+                    // if (choiceLocked) {
+                        //lockInChoiceButton.disabled = true; // Ensure button stays disabled
+                        //return;
+                    //}
+                    //for (const radio of radioButtons) {
+                        //if (radio.checked) {
+                            //lockInChoiceButton.disabled = false;
+                            //return;
+                        //}
+                    //}
+                    //lockInChoiceButton.disabled = true;
+                //}
+
+                // Initially update button state
+                updateLockInButtonState();
         
                 // Add event listeners to radio buttons
                 for (const radio of radioButtons) {
-                    radio.addEventListener('change', checkRadioSelection);
+                    radio.addEventListener('change', updateLockInButtonState);
                 }
+
+                //checkRadioSelection(); // Check initial state when DOM is loaded
 
                 // next-task button click handler
                 document.getElementById("next-task").addEventListener("click", function () {
