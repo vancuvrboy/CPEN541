@@ -45,7 +45,7 @@
     
     <div id=newdemo1 class="tab-pane fade active in" style=display:block>
     <div class=row>
-    <div id=profile class=col-xs-5 style="height: 340px;">
+    <div id=profile class=col-xs-5 style="height: 380px;">
     <h3 id=mortgage align=center>Mortgage Amount: Loading...</h3>
     <h5 id=commission align=center>Commission Amount: Loading...</h5>
     <h5 id=penalty align=center>Penalty Amount: Loading...</h5>
@@ -70,6 +70,9 @@
             </tr>
             <tr>
             <th>Self Employed</th>
+            <td>Loading...</td>
+            </tr>
+            <th>No. Dependents</th>
             <td>Loading...</td>
             </tr>
         </table>
@@ -364,6 +367,10 @@
                             </tr>
                             <tr>
                                 <th>Self Employed</th>
+                                <td>${data['SEmployed']}</td>
+                            </tr>
+                                                        <tr>
+                                <th>No. Dependents</th>
                                 <td>${data['SEmployed']}</td>
                             </tr>
                         `;
