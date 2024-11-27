@@ -83,7 +83,7 @@
     
     
         <div class="container-fluid list-group-item list-group-item-warning" id="user_prediction_region" style="height: 368px;">
-            <h3>Choose your AI assistant, then make your decision</h3>
+            <h3 id="decision-instructions">Loading...</h3>
         
             <p></p>
             <form id="decision" class="container-fluid list-group-item list-group-item-light" style="display: none; height: 240px;">
@@ -146,7 +146,7 @@
                  style="width: 480px; 
                         height: 270px; 
                         border: 2px solid black; 
-                        display: flex; 
+                        display: none; 
                         align-items: flex-start; 
                         justify-content: flex-start; 
                         padding: 10px; 
@@ -162,7 +162,7 @@
                  style="width: 480px; 
                         height: 270px; 
                         border: 2px solid black; 
-                        display: flex; 
+                        display: none; 
                         align-items: center; 
                         justify-content: center; 
                         background-color: white;">
@@ -187,9 +187,9 @@
                         gap: 10px; 
                         height: 270px; 
                         width: 100px;">
-              <button id="textbot_btn" class="btn btn-primary" style="flex: 1;">Textbot</button>
+              <button id="textbot_btn" class="btn btn-primary" style="flex: 1; display: none;">Textbot</button>
               <button id="audiobot_btn" class="btn btn-primary" style="flex: 1; display: none;">Audiobot</button>
-              <button id="videobot_btn" class="btn btn-primary" style="flex: 1;">Videobot</button>
+              <button id="videobot_btn" class="btn btn-primary" style="flex: 1; display: none;">Videobot</button>
             </div>
           </div>
           
@@ -213,7 +213,12 @@
             let choiceLocked = true;
             let total_score_new; // Updated total score after each decision
             let participantId;
-            let chosenAI = "none"; // Default AI assistant chosen by the subject
+            let chosenAI = "none"; // AI assistant chosen by the subject. videobot, audiobot, textbot
+            let time_limit;
+            let maxChallenges = 50; // Maximum number of tasks that can ever be run (used for the progress bar)
+            let total_tasks; // Total number of tasks in the experiment
+            let ai_choices; // AI choices setup in the 541_cases sheet obtained in fetchData
+            let section; // Section of the experiment. Section drives how much time is given to the subject
         
             // Timer variables
             let timerElement;
@@ -274,7 +279,7 @@
                         // Trigger additional actions here when the timer reaches 0
                         // Show the profile details container
                         showProfileDetails();
-                        subjects_time = 180; // Set the time to 180 seconds
+                        subjects_time = time_limit; // Set the time to time_limit from query string
                         // Disable the Lock in Choice button
                         lockInChoiceButton.disabled = true;
                         // Disable the radio buttons
@@ -336,9 +341,43 @@
                         console.error('Error submitting task data:', error);
                         alert('An error occurred. Please try again.');
                     });
-                }
+            }
 
-        
+            // function to get the time limit
+            // if the time_limit parameter is set with the querystrin, use that value
+            // otherwise get it from the google sheet by calling an app script requesting a value
+            // from the cell defined by the row participantID and the column name derived from "time_limit"+section
+            async function getTimeLimit() {
+                let time_limit = getQueryParameter('time_limit');
+                if (time_limit) {
+                    return parseInt(time_limit);
+                } else {
+                    const scriptUrl = "https://script.google.com/macros/s/AKfycbznEvtFQj1fciuUNcQlrqfR2kTyVKrqLenaybztrwPS_6mMChP4XXpgefIKg-freI_yQw/exec";
+                    let queryString = `?section=${section}&participantId=${participantId}`;
+                    console.log("getTimeLimit queryString: ", queryString);
+
+                    try {
+                        const response = await fetch(scriptUrl + queryString, {
+                            method: 'GET',
+                        });
+                        const data = await response.text(); // Treat response as plain text
+                        console.log('Raw Server Response:', data);
+
+                        // Parse the response as a number
+                        time_limit = parseInt(data);
+                        if (isNaN(time_limit)) {
+                            throw new Error('Server returned invalid time limit');
+                        }
+
+                        console.log('time_limit:', time_limit);
+                        return time_limit;
+                    } catch (error) {
+                        console.error('Error fetching time limit:', error);
+                        return 180; // Default to 180 seconds if an error occurs
+                    }
+                }
+            }
+
             // Function to fetch data from Google Apps Script
             function fetchData() {
 
@@ -386,7 +425,10 @@
                         // Update the penalty
                         document.getElementById('penalty').textContent = 'Penalty Amount: -$' + penalty.toLocaleString();
 
-        
+                        // get the section
+                        section = data['section'];
+                        console.log('Section:', section);
+
                         // Update the table of attributes
                         var tableBody = document.querySelector('#tab1 tbody');
                         tableBody.innerHTML = `
@@ -418,15 +460,56 @@
         
                         // Set the correct_answer variable
                         correct_answer = data['Approved'].toString();
+                        console.log('Correct Answer:', correct_answer);
+
+                        // enable components of the interface depending on the value of ai_choices
+                        // get the AI choices
+                        ai_choices = data['ai_choices'];
+                        console.log('AI Choices:', ai_choices);
+                        
+                        return getTimeLimit();
+                    })
+                    .then(time_limit => {
+                        // Set the time limit
+                        console.log('Fetched time_limit:', time_limit);
         
                         // Initialize the timer
-                        timeRemaining = 180; // 3 minutes in seconds
+                        timeRemaining = time_limit; // 3 minutes in seconds is default
         
                         // Start the countdown timer
                         updateTimerDisplay();
                         startCountdown();
                         choiceLocked = false; // Enable the choice lock button
                         updateLockInButtonState(); // Update button based on new state
+
+                        // enable the buttons based on the ai_choices
+                        const textDecision = document.getElementById("decision-instructions");
+                        // if aichoices includes the string video, enable the videobot button and show the video container and placeholder
+                        if (ai_choices.includes("video")) {
+                            document.getElementById("videobot_btn").style.display = "inline-block";
+                            document.getElementById("video_container").style.display = "flex";
+                            document.getElementById("video_placeholder").style.display = "block";
+                            textDecision.textContent = "Start your AI assistant, then make your decision";
+                        }
+                        // if aichoices includes the string audio, enable the audiobot button and show the video container and placeholder
+                        if (ai_choices.includes("audio")) {
+                            document.getElementById("audiobot_btn").style.display = "inline-block";
+                            document.getElementById("video_container").style.display = "flex";
+                            document.getElementById("video_placeholder").style.display = "block";
+                            textDecision.textContent = "Start your AI assistant, then make your decision";
+                        }
+                        // if aichoices includes the string text, enable the textbot button and show the text container
+                        if (ai_choices.includes("text")) {
+                            document.getElementById("textbot_btn").style.display = "inline-block";
+                            document.getElementById("ai_text").style.display = "block";
+                            textDecision.textContent = "Start your AI assistant, then make your decision";
+                        }
+                        // if ai_choices = none or is blank then show the profile details container
+                        if (ai_choices == "none" || ai_choices == "") {
+                            showProfileDetails();
+                            textDecision.textContent = "Make your decision";
+                        }
+
                     })
                     .catch(error => {
                         console.error('Error fetching data:', error);
@@ -452,12 +535,20 @@
                 // update & display total score
                 document.getElementById('total_score_div').textContent = 'Total Score: $' + parseInt(total_score).toLocaleString();
                 next_challenge = getQueryParameter('next_challenge') || '1';
-                // Ensure next_challenge is between 1 and 15
-                const maxChallenges = 15;
-                const challengeValue = Math.min(Math.max(next_challenge, 1), maxChallenges);
+
+                // get time_limit from the get_time_limit function
+                // time_limit = get_time_limit();
+                
+                // get limt_limit from the query string
+                // time_limit = getQueryParameter('time_limit') || '180'; // Default to '180' if not provided
+                
+                // get total_tasks from the query string
+                total_tasks = getQueryParameter('total_tasks') || '25'; // Default to '25' if not provided
 
                 // Calculate the progress percentage
-                const progressPercentage = (challengeValue / maxChallenges) * 100;
+                // Ensure next_challenge is between 1 and maxChallenges
+                const challengeValue = Math.min(Math.max(next_challenge, 1), maxChallenges);
+                const progressPercentage = (challengeValue / total_tasks) * 100;
 
                 // Update the progress bar width and text
                 const progressBar = document.getElementById('progressbar1');
@@ -469,6 +560,7 @@
                 console.log('New Page: Participant ID:', participantId);
                 console.log('New Page: Total Score:', total_score);
                 console.log('New Page: Next Challenge:', next_challenge);
+
             }
 
             document.addEventListener('DOMContentLoaded', pageloadEvents);
@@ -479,24 +571,6 @@
                 radioButtons = document.getElementsByName('firstdecision');
                 // Assign DOM elements
                 timerElement = document.getElementById("countdown_timer");
-
-                // Ensure button is initially disabled
-                // lockInChoiceButton.disabled = true;
-        
-                // Function to check if a radio button is selected
-                // function checkRadioSelection() {
-                    // if (choiceLocked) {
-                        //lockInChoiceButton.disabled = true; // Ensure button stays disabled
-                        //return;
-                    //}
-                    //for (const radio of radioButtons) {
-                        //if (radio.checked) {
-                            //lockInChoiceButton.disabled = false;
-                            //return;
-                        //}
-                    //}
-                    //lockInChoiceButton.disabled = true;
-                //}
 
                 // Initially update button state
                 updateLockInButtonState();
@@ -517,7 +591,7 @@
                     console.log("F&N pushed: Next Challenge:", parseInt(next_challenge) + 1);
                     storeCompletedTaskData();
                     // redirect to the next challenge
-                    window.location.href = `https://vancuvrboy.github.io/CPEN541/task2.htm?participantId=${participantId}&total_score=${total_score_new}&next_challenge=${parseInt(next_challenge) + 1}`;
+                    window.location.href = `https://vancuvrboy.github.io/CPEN541/task2.htm?participantId=${participantId}&total_score=${total_score_new}&next_challenge=${parseInt(next_challenge) + 1}&time_limit=${time_limit}&total_tasks=${total_tasks}`;
                 });
         
                 // Handle Lock in Choice button click
@@ -550,7 +624,7 @@
                     console.log("2. Lock in Choice clicked: Subject's Choice:", subjects_choice);
 
                     // record the time it took the subject to click the lock in choice button
-                    subjects_time = 180 - timeRemaining;
+                    subjects_time = time_limit - timeRemaining;
         
                     // Disable the Lock in Choice button
                     lockInChoiceButton.disabled = true;
@@ -583,7 +657,7 @@
                             total_score_new = parseInt(total_score);
                         }
                     } else {
-                        document.getElementById("your_result").textContent = "The bank and you DO NOT agree!";
+                        document.getElementById("your_result").textContent = "The bank and you don't agree!";
                         // if you are wrong, deduct the penalty from the score
                         document.getElementById("show_score").textContent = "Score: -$" + penalty.toLocaleString();
                         // update the total score
