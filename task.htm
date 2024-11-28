@@ -648,6 +648,7 @@
                         alert("You have finished 16 tasks, In the following 9 tasks you will have help from the same two AIs. But this time, you will have to decide which AI to trust for each task.");
                         window.location.href = `https://vancuvrboy.github.io/CPEN541/task.htm?participantId=${participantId}&total_score=${total_score_new}&next_challenge=17&time_limit=120&total_tasks=25`;
                     } else if (parseInt(next_challenge) == 25) {
+                        alert("You have completed all your tasks! Now we'd like to ask a few questions before you see how you did against other participants.");
                         window.location.href = `https://vancuvrboy.github.io/CPEN541/survey.htm?participantId=${participantId}&total_score=${total_score_new}`;
                     } else {
                         window.location.href = `https://vancuvrboy.github.io/CPEN541/task.htm?participantId=${participantId}&total_score=${total_score_new}&next_challenge=${parseInt(next_challenge) + 1}&time_limit=120&total_tasks=25`;

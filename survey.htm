@@ -89,13 +89,13 @@
     <!-- User Information Section -->
     <div class="card my-3">
         <div class="card-header" style="background-color:rgb(10,55,95); color:white;">
-            <h3>Your Information</h3>
+            <h3>Your Information (Optional)</h3>
         </div>
         <div class="card-body">
             <form id="form_info" class="form-inline">
                 <div class="form-group">
-                    <label for="id">Prolific ID:</label>
-                    <input type="text" id="id" name="id" class="form-control" required>
+                    <label for="id">Participant ID:</label>
+                    <input type="text" id="id" name="id" class="form-control" readonly>
                 </div>
                 <div class="form-group">
                     <label for="age">Age:</label>
@@ -128,7 +128,7 @@
      <!-- Post-Task Questionnaire -->
      <div class="card my-3">
         <div class="card-header" style="background-color:rgb(10,55,95); color:white;">
-            <h3>Post-Task Questionnaire</h3>
+            <h3>Post-Task Questionnaire (Required)</h3>
         </div>
         <div class="card-body">
             <form id="post-task-questionnaire">
@@ -138,7 +138,7 @@
                         <h4>Q1. I trust the AI's recommendations in this experiment.</h4>
                         <div class="slider-container">
                             <label class="form-check-label">Strongly Disagree</label>
-                            <input type="range" class="form-range slider" min="1" max="7" step="1" id="Q-trust1">
+                            <input type="range" class="form-range slider" min="1" max="7" step="1" id="Q1">
                             <label class="form-check-label">Strongly Agree</label>
                         </div>
                         <!-- Numerical Scale -->
@@ -152,7 +152,7 @@
                         <h4>Q2. I was confident during the decision-making process.</h4>
                         <div class="slider-container">
                             <label class="form-check-label">Strongly Disagree</label>
-                            <input type="range" class="form-range slider" min="1" max="7" step="1" id="Q-confidence1">
+                            <input type="range" class="form-range slider" min="1" max="7" step="1" id="Q2">
                             <label class="form-check-label">Strongly Agree</label>
                         </div>
                         <div class="numerical-scale">
@@ -165,7 +165,7 @@
                         <h4>Q3. The system was complex.</h4>
                         <div class="slider-container">
                             <label class="form-check-label">Strongly Disagree</label>
-                            <input type="range" class="form-range slider" min="1" max="7" step="1" id="Q-complex1">
+                            <input type="range" class="form-range slider" min="1" max="7" step="1" id="Q3">
                             <label class="form-check-label">Strongly Agree</label>
                         </div>
                         <!-- Numerical Scale -->
@@ -179,7 +179,7 @@
                         <h4>Q4. I thought the task was mentally demanding.</h4>
                         <div class="slider-container">
                             <label class="form-check-label">Strongly Disagree</label>
-                            <input type="range" class="form-range slider" min="1" max="7" step="1" id="Q-mental1">
+                            <input type="range" class="form-range slider" min="1" max="7" step="1" id="Q4">
                             <label class="form-check-label">Strongly Agree</label>
                         </div>
                         <!-- Numerical Scale -->
@@ -193,7 +193,7 @@
                         <h4>Q5. I thought I had autonomy in the decision-making process.</h4>
                         <div class="slider-container">
                             <label class="form-check-label">Strongly Disagree</label>
-                            <input type="range" class="form-range slider" min="1" max="7" step="1" id="Q-autonomy1">
+                            <input type="range" class="form-range slider" min="1" max="7" step="1" id="Q5">
                             <label class="form-check-label">Strongly Agree</label>
                         </div>
                         <!-- Numerical Scale -->
@@ -207,7 +207,7 @@
                         <h4>Q6. I was satisfied with the decision-making process collaborating with the AI.</h4>
                         <div class="slider-container">
                             <label class="form-check-label">Strongly Disagree</label>
-                            <input type="range" class="form-range slider" min="1" max="7" step="1" id="Q-satisfied1">
+                            <input type="range" class="form-range slider" min="1" max="7" step="1" id="Q6">
                             <label class="form-check-label">Strongly Agree</label>
                         </div>
                         <!-- Numerical Scale -->
@@ -221,7 +221,7 @@
                         <h4>Q7. I would like to use this system in future decision-making tasks.</h4>
                         <div class="slider-container">
                             <label class="form-check-label">Strongly Disagree</label>
-                            <input type="range" class="form-range slider" min="1" max="7" step="1" id="Q-future1">
+                            <input type="range" class="form-range slider" min="1" max="7" step="1" id="Q7">
                             <label class="form-check-label">Strongly Agree</label>
                         </div>
                         <!-- Numerical Scale -->
@@ -238,10 +238,36 @@
 
     <!-- Submit Button -->
     <div style="text-align:center;margin-top:30px;">
-        <button id="submitFeedback" class="btn btn-primary btn-lg">Submit</button>
+        <button id="submitFeedback" class="btn btn-primary btn-lg" 
+            onclick="console.log('Button clicked!'); alert('Redirecting to leaderboard...'); window.location.href='https://vancuvrboy.github.io/CPEN541/final.htm';">
+            Submit & Go to Leaderboard
+        </button>
     </div>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    // Function to extract query parameters
+    function getQueryParameter(param) {
+        var urlParams = new URLSearchParams(window.location.search);
+        return urlParams.get(param);
+    }
+
+    // Prepopulate Participant ID field
+    document.addEventListener("DOMContentLoaded", function () {
+        const participantId = getQueryParameter("participantId"); // Replace 'participantId' with the actual query parameter name
+        const participantField = document.getElementById("id");
+
+        if (participantId) {
+            participantField.value = participantId; // Set the value from the query string
+            console.log("Participant ID found in the query string:", participantId);
+        } else {
+            console.error("Participant ID not found in the query string.");
+            participantField.value = "Unknown"; // Default fallback value if the query parameter is missing
+        }
+
+        participantField.readOnly = true; // Make the field readonly
+    });
+</script>
 </body>
 </html>
