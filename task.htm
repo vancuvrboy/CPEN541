@@ -132,7 +132,7 @@
         
             <!-- Countdown Timer -->
             <div id="countdown_timer" style="margin-left: 20px; margin-top: 20px; font-size: 20px; text-align: left; font-weight: bold; color: darkred;">
-                Time Remaining: 03:00
+                Loading ...
             </div>
         </div>
 </div>
@@ -219,6 +219,7 @@
             let total_tasks; // Total number of tasks in the experiment
             let ai_choices; // AI choices setup in the 541_cases sheet obtained in fetchData
             let section; // Section of the experiment. Section drives how much time is given to the subject
+            let textbot_recommend; // recommendation from the textbot
         
             // Timer variables
             let timerElement;
@@ -378,6 +379,47 @@
                 }
             }
 
+            // function to add an effect that makes it look like an AI is generating the response
+            function generateWithDelay(container, delay, callback) {
+                console.log('generateWithDelay called with delay:', delay);
+
+                if (delay === 0) {
+                    console.log('Delay is 0, skipping "Generating..." and calling callback immediately.');
+                    callback();
+                    return;
+                }
+
+                // Log that "Generating..." is being added
+                console.log('Creating "Generating..." text element.');
+
+                const generatingText = document.createElement("div");
+                generatingText.id = "generatingText";
+                generatingText.textContent = "Generating";
+                container.appendChild(generatingText);
+                console.log('Added "Generating..." text to container:', generatingText);
+
+                let dotCount = 0;
+
+                // Add moving dots
+                console.log('Starting dot animation...');
+                const dotInterval = setInterval(() => {
+                    generatingText.textContent = "Generating" + ".".repeat(dotCount % 4);
+                    console.log('Updated text with dots:', generatingText.textContent);
+                    dotCount++;
+                }, 500); // Dots appear at a rate of 2 per second
+
+                // Stop the animation after the delay and invoke the callback
+                setTimeout(() => {
+                    console.log('Delay expired, clearing interval and removing "Generating...".');
+                    clearInterval(dotInterval); // Stop the moving dots
+                    generatingText.remove(); // Remove the "Generating..." text
+                    console.log('"Generating..." removed. Calling callback.');
+                    callback(); // Invoke the callback after the delay
+                }, delay);
+            }
+
+
+
             // Function to fetch data from Google Apps Script
             function fetchData() {
 
@@ -408,7 +450,10 @@
                         console.log('after error check: Data received:', data);
 
                         textbot_text = data['text_pred'];
-                        audiovideobot_text = data['av_pred']; // no need to fetch for this version
+                        // audiovideobot_text = data['av_pred']; // no need to fetch for this version, text display diasabled in the video and audio button handlers
+                        
+                        textbot_recommend = data['text_recom'];
+
                         audiobot_video = "https://vancuvrboy.github.io/CPEN541/" + data['audio_url']; // no need to fetch for this version
                         videobot_video = "https://vancuvrboy.github.io/CPEN541/" + data['video_url'];
 
@@ -697,19 +742,46 @@
                     const aiText = document.getElementById("ai_text");
         
                     // Typing effect logic
-                    let index = 0;
+                    let index = 0; // Track the index of the current character in textbot_text
+                    let typingStage = 0; // Track which part of the text is being typed
+                    let firstDelay = 3000; // Delay before typing the first block
+                    let secondDelay = 10000; // Delay before typing the second block
+                    let typingSpeed = 20; // Adjust typing speed here
+
                     function typeCharacter() {
-                        if (index < textbot_text.length) {
-                            aiText.textContent += textbot_text[index];
-                            index++;
-                            setTimeout(typeCharacter, 20); // Adjust typing speed here
+                        if (typingStage === 0) {
+                            // Typing from textbot_text
+                            if (index < textbot_text.length) {
+                                aiText.textContent += textbot_text[index];
+                                index++;
+                                setTimeout(typeCharacter, typingSpeed); // Adjust typing speed here
+                            } else {
+                                typingStage = 1; // Move to the next stage
+                                index = 0; // Reset index for textbot_recommend
+                                // Delay with "Generating..." before the second text
+                                generateWithDelay(aiText, secondDelay, () => {
+                                    aiText.textContent += "\n\n"; // Add line feed
+                                    typeCharacter(); // Start typing the second block
+                                });
+                            }
+                        } else if (typingStage === 1) {
+                            // Typing from textbot_recommend
+                            if (index < textbot_recommend.length) {
+                                aiText.textContent += textbot_recommend[index];
+                                index++;
+                                setTimeout(typeCharacter, typingSpeed); // Adjust typing speed here
+                            }
                         }
                     }
+
                     if (!text_played) {
                         aiText.textContent = ""; // Clear the text box before typing
-                        typeCharacter(); // Start the typing effect
-                        text_played = true;
+                        generateWithDelay(aiText, 3000, () => {
+                            typeCharacter(); // Start typing the first block
+                        });
+                        text_played = true; // Ensure this logic only runs once
                     }
+
                 });
         
                 // Audiobot button click handler
