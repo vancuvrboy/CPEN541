@@ -645,8 +645,29 @@
                     console.log("F&N pushed: Total Score:", total_score_new);
                     console.log("F&N pushed: Next Challenge:", parseInt(next_challenge) + 1);
                     storeCompletedTaskData();
-                    // redirect to the next challenge
-                    window.location.href = `https://vancuvrboy.github.io/CPEN541/task.htm?participantId=${participantId}&total_score=${total_score_new}&next_challenge=${parseInt(next_challenge) + 1}&time_limit=${time_limit}&total_tasks=${total_tasks}`;
+                    // redirect to the next challenge, unless you have just completed challenges 8, 16, or 25
+                    // if it is challenge 8, pop up an alert that says "You have finished 8 tasks, In the following 8 tasks you will have help from two
+                    // different AIs. You need to decide if you trust the AI to help you or not.
+                    // In that case redirect to https://vancuvrboy.github.io/CPEN541/task.htm?participantId=participantId&total_score=total_score_new&next_challenge=9&time_limit=120&total_tasks=25
+                    // if it is challenge 16, pop up an alert that says "You have finished 16 tasks, In the following 9 tasks you will have help from the same two
+                    // AIs. But this time, you will have to decide which AI to trust for each task."
+                    // In that case redirect to https://vancuvrboy.github.io/CPEN541/task.htm?participantId=participantId&total_score=total_score_new&next_challenge=17&time_limit=120&total_tasks=25
+                    // if it is 25, then redirect to https://vancuvrboy.github.io/CPEN541/page14.htm?participantId=participantId&total_score=total_score_new
+                    //window.location.href = `https://vancuvrboy.github.io/CPEN541/task.htm?participantId=${participantId}&total_score=${total_score_new}&next_challenge=${parseInt(next_challenge) + 1}&time_limit=${time_limit}&total_tasks=${total_tasks}`;
+
+                    // if the next challenge is 8, 16, or 25, redirect to the appropriate page
+                    if (parseInt(next_challenge) == 8) {
+                        console.log("finished 8 tasks");
+                        alert("You have finished 8 tasks, In the following 8 tasks you will have help from two different AIs. You need to decide if you trust the AI to help you or not.");
+                        window.location.href = `https://vancuvrboy.github.io/CPEN541/task.htm?participantId=${participantId}&total_score=${total_score_new}&next_challenge=9&time_limit=120&total_tasks=25`;
+                    } else if (parseInt(next_challenge) == 16) {
+                        alert("You have finished 16 tasks, In the following 9 tasks you will have help from the same two AIs. But this time, you will have to decide which AI to trust for each task.");
+                        window.location.href = `https://vancuvrboy.github.io/CPEN541/task.htm?participantId=${participantId}&total_score=${total_score_new}&next_challenge=17&time_limit=120&total_tasks=25`;
+                    } else if (parseInt(next_challenge) == 25) {
+                        window.location.href = `https://vancuvrboy.github.io/CPEN541/page14.htm?participantId=${participantId}&total_score=${total_score_new}`;
+                    } else {
+                        window.location.href = `https://vancuvrboy.github.io/CPEN541/task.htm?participantId=${participantId}&total_score=${total_score_new}&next_challenge=${parseInt(next_challenge) + 1}&time_limit=120&total_tasks=25`;
+                    }
                 });
         
                 // Handle Lock in Choice button click
