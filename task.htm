@@ -48,7 +48,7 @@
     <div id=profile class=col-xs-5 style="height: 380px;">
     <h3 id=mortgage align=center>Mortgage Amount: Loading...</h3>
     <h5 id=commission align=center>Commission Amount: Loading...</h5>
-    <h5 id=penalty align=center>Penalty Amount: Loading...</h5>
+    <h5 id=penalty align=center>Max Penalty Amount: Loading...</h5>
     
     <div class="main" id="profile_details" style="display: block;">
         <table id=tab1>
@@ -473,7 +473,7 @@
                         maxPenalty = bankRejectPenalty;
 
                         // Update the penalty
-                        document.getElementById('penalty').textContent = 'Penalty Amount: -$' + maxPenalty.toLocaleString();
+                        document.getElementById('penalty').textContent = 'Max Penalty Amount: -$' + maxPenalty.toLocaleString();
 
                         // get the section
                         section = data['section'];
