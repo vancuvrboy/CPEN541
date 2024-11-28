@@ -205,8 +205,8 @@
             let subjects_time;
             let correct_answer; // Will be set after fetching data
             let commission;
-            let penalty;
-            let maxPenalty; // maximum penalty for rejecting something that later gets approved by the bank
+            let penalty; // the actual penalty depending on the choice
+            let maxPenalty; // maximum penalty (same value as bankRejectPenalty))
             let bankApprovePenalty; // penalty for rejecting something that later gets approved by the bank
             let bankRejectPenalty; // penalty for approving something that later gets rejected by the bank
             let total_score; // Total score as a string
