@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Feedback Form</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: rgb(220,240,255);
+            color: rgb(10,55,95);
+            padding: 20px;
+            font-size: 14px;
+        }
+        .form-inline .form-group {
+            display: inline-block;
+            margin-right: 15px;
+        }
+        .form-inline label {
+            margin-right: 5px;
+        }
+        .form-check-label {
+            margin-right: 10px;
+            font-size: 14px;
+        }
+        .list-group-item h4 {
+            font-size: 16px;
+        }
+        .likert-scale {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 5px;
+            font-size: 12px;
+        }
+        .slider-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 15px;
+        }
+
+        .slider {
+            width: 75%;
+            margin: 0 10px;
+        }
+
+        .numerical-scale {
+            position: relative;
+            width: 75%;
+            margin: 10px auto;
+            height: 20px;
+        }
+
+        .numerical-scale div {
+            position: absolute;
+            width: 100%;
+            top: 0;
+            left: 0;
+            height: 20px;
+        }
+
+        .numerical-scale span {
+            position: absolute;
+            transform: translateX(-50%);
+        }
+
+        .numerical-scale span:nth-child(1) { left: 3%; }
+        .numerical-scale span:nth-child(2) { left: 19%; }
+        .numerical-scale span:nth-child(3) { left: 35%; }
+        .numerical-scale span:nth-child(4) { left: 51%; }
+        .numerical-scale span:nth-child(5) { left: 67%; }
+        .numerical-scale span:nth-child(6) { left: 83%; }
+        .numerical-scale span:nth-child(7) { left: 99%; }
+    </style>
+</head>
+<body>
+
+
+    <div class=container>
+        <h2 id=title1>Mortgage Broker AI Assistance</h2>
+    </div>
+    
+    <div id="question_area" class="container">
+        <h1 style="text-align:center; color:rgb(10,55,95);">Feedback Form</h1>
+        <p style="font-size:20px; text-align:center;">
+            Finally, we would like to gather some feedback about your experience and perceptions in the last 25 tasks. Thank you!
+        </p>
+
+    <!-- User Information Section -->
+    <div class="card my-3">
+        <div class="card-header" style="background-color:rgb(10,55,95); color:white;">
+            <h3>Your Information</h3>
+        </div>
+        <div class="card-body">
+            <form id="form_info" class="form-inline">
+                <div class="form-group">
+                    <label for="id">Prolific ID:</label>
+                    <input type="text" id="id" name="id" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label for="age">Age:</label>
+                    <input type="number" id="age" name="age" class="form-control" min="10" max="90" required>
+                </div>
+                <div class="form-group">
+                    <label for="gender">Gender:</label>
+                    <select id="gender" name="gender" class="form-select" required>
+                        <option value="" selected disabled>Select</option>
+                        <option>Male</option>
+                        <option>Female</option>
+                        <option>Prefer not to say</option>
+                        <option>Others</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="experience">AI Knowledge:</label>
+                    <select id="experience" name="experience" class="form-select" required>
+                        <option value="" selected disabled>Select</option>
+                        <option>Expert in AI</option>
+                        <option>Know/Used AI algorithms</option>
+                        <option>Basic AI concepts</option>
+                        <option>No AI knowledge</option>
+                    </select>
+                </div>
+            </form>
+        </div>
+    </div>
+
+     <!-- Post-Task Questionnaire -->
+     <div class="card my-3">
+        <div class="card-header" style="background-color:rgb(10,55,95); color:white;">
+            <h3>Post-Task Questionnaire</h3>
+        </div>
+        <div class="card-body">
+            <form id="post-task-questionnaire">
+                <ul class="list-group list-group-flush">
+                    <!-- Question Template -->
+                    <li class="list-group-item" style="position: relative;">
+                        <h4>Q1. I trust the AI's recommendations in this experiment.</h4>
+                        <div class="slider-container">
+                            <label class="form-check-label">Strongly Disagree</label>
+                            <input type="range" class="form-range slider" min="1" max="7" step="1" id="Q-trust1">
+                            <label class="form-check-label">Strongly Agree</label>
+                        </div>
+                        <!-- Numerical Scale -->
+                        <div class="numerical-scale">
+                            <div>
+                                <span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span><span>7</span>
+                            </div>
+                        </div>
+                    </li>
+                    <li class="list-group-item" style="position: relative;">
+                        <h4>Q2. I was confident during the decision-making process.</h4>
+                        <div class="slider-container">
+                            <label class="form-check-label">Strongly Disagree</label>
+                            <input type="range" class="form-range slider" min="1" max="7" step="1" id="Q-confidence1">
+                            <label class="form-check-label">Strongly Agree</label>
+                        </div>
+                        <div class="numerical-scale">
+                            <div>
+                                <span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span><span>7</span>
+                            </div>
+                        </div>
+                    </li>
+                    <li class="list-group-item" style="position: relative;">
+                        <h4>Q3. The system was complex.</h4>
+                        <div class="slider-container">
+                            <label class="form-check-label">Strongly Disagree</label>
+                            <input type="range" class="form-range slider" min="1" max="7" step="1" id="Q-complex1">
+                            <label class="form-check-label">Strongly Agree</label>
+                        </div>
+                        <!-- Numerical Scale -->
+                        <div class="numerical-scale">
+                            <div>
+                                <span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span><span>7</span>
+                            </div>
+                        </div>
+                    </li>
+                    <li class="list-group-item" style="position: relative;">
+                        <h4>Q4. I thought the task was mentally demanding.</h4>
+                        <div class="slider-container">
+                            <label class="form-check-label">Strongly Disagree</label>
+                            <input type="range" class="form-range slider" min="1" max="7" step="1" id="Q-mental1">
+                            <label class="form-check-label">Strongly Agree</label>
+                        </div>
+                        <!-- Numerical Scale -->
+                        <div class="numerical-scale">
+                            <div>
+                                <span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span><span>7</span>
+                            </div>
+                        </div>
+                    </li>
+                    <li class="list-group-item" style="position: relative;">
+                        <h4>Q5. I thought I had autonomy in the decision-making process.</h4>
+                        <div class="slider-container">
+                            <label class="form-check-label">Strongly Disagree</label>
+                            <input type="range" class="form-range slider" min="1" max="7" step="1" id="Q-autonomy1">
+                            <label class="form-check-label">Strongly Agree</label>
+                        </div>
+                        <!-- Numerical Scale -->
+                        <div class="numerical-scale">
+                            <div>
+                                <span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span><span>7</span>
+                            </div>
+                        </div>
+                    </li>
+                    <li class="list-group-item" style="position: relative;">
+                        <h4>Q6. I was satisfied with the decision-making process collaborating with the AI.</h4>
+                        <div class="slider-container">
+                            <label class="form-check-label">Strongly Disagree</label>
+                            <input type="range" class="form-range slider" min="1" max="7" step="1" id="Q-satisfied1">
+                            <label class="form-check-label">Strongly Agree</label>
+                        </div>
+                        <!-- Numerical Scale -->
+                        <div class="numerical-scale">
+                            <div>
+                                <span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span><span>7</span>
+                            </div>
+                        </div>
+                    </li>
+                    <li class="list-group-item" style="position: relative;">
+                        <h4>Q7. I would like to use this system in future decision-making tasks.</h4>
+                        <div class="slider-container">
+                            <label class="form-check-label">Strongly Disagree</label>
+                            <input type="range" class="form-range slider" min="1" max="7" step="1" id="Q-future1">
+                            <label class="form-check-label">Strongly Agree</label>
+                        </div>
+                        <!-- Numerical Scale -->
+                        <div class="numerical-scale">
+                            <div>
+                                <span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span><span>7</span>
+                            </div>
+                        </div>
+                    </li>                    
+                </ul>
+            </form>
+        </div>
+    </div>
+
+    <!-- Submit Button -->
+    <div style="text-align:center;margin-top:30px;">
+        <button id="submitFeedback" class="btn btn-primary btn-lg">Submit</button>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
