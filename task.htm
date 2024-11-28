@@ -256,6 +256,7 @@
                 profileDetails.style.display = "block"; // Make the container visible
                 const decision = document.getElementById("decision");
                 decision.style.display = "block"; // Make the decision form visible
+                console.log("Profile Details shown. Value of time_limit:", time_limit);
             }
         
             // Timer functions
@@ -351,6 +352,7 @@
             async function getTimeLimit() {
                 let time_limit = getQueryParameter('time_limit');
                 if (time_limit) {
+                    console.log('Using time limit from query string:', time_limit);
                     return parseInt(time_limit);
                 } else {
                     const scriptUrl = "https://script.google.com/macros/s/AKfycbznEvtFQj1fciuUNcQlrqfR2kTyVKrqLenaybztrwPS_6mMChP4XXpgefIKg-freI_yQw/exec";
@@ -390,30 +392,24 @@
                 }
 
                 // Log that "Generating..." is being added
-                console.log('Creating "Generating..." text element.');
 
                 const generatingText = document.createElement("div");
                 generatingText.id = "generatingText";
                 generatingText.textContent = "Generating";
                 container.appendChild(generatingText);
-                console.log('Added "Generating..." text to container:', generatingText);
 
                 let dotCount = 0;
 
                 // Add moving dots
-                console.log('Starting dot animation...');
                 const dotInterval = setInterval(() => {
                     generatingText.textContent = "Generating" + ".".repeat(dotCount % 4);
-                    console.log('Updated text with dots:', generatingText.textContent);
                     dotCount++;
                 }, 500); // Dots appear at a rate of 2 per second
 
                 // Stop the animation after the delay and invoke the callback
                 setTimeout(() => {
-                    console.log('Delay expired, clearing interval and removing "Generating...".');
                     clearInterval(dotInterval); // Stop the moving dots
                     generatingText.remove(); // Remove the "Generating..." text
-                    console.log('"Generating..." removed. Calling callback.');
                     callback(); // Invoke the callback after the delay
                 }, delay);
             }
@@ -514,12 +510,14 @@
                         
                         return getTimeLimit();
                     })
-                    .then(time_limit => {
+                    .then(fetched_time_limit => {
                         // Set the time limit
-                        console.log('Fetched time_limit:', time_limit);
+                        console.log('Fetched time_limit:', fetched_time_limit);
         
                         // Initialize the timer
+                        time_limit = fetched_time_limit;
                         timeRemaining = time_limit; // 3 minutes in seconds is default
+
         
                         // Start the countdown timer
                         updateTimerDisplay();
@@ -554,6 +552,7 @@
                             showProfileDetails();
                             textDecision.textContent = "Make your decision";
                         }
+                        console.log('Bots Shown, Time Limit:', time_limit);
 
                     })
                     .catch(error => {
@@ -580,6 +579,8 @@
                 // update & display total score
                 document.getElementById('total_score_div').textContent = 'Total Score: $' + parseInt(total_score).toLocaleString();
                 next_challenge = getQueryParameter('next_challenge') || '1';
+
+                
 
                 // get time_limit from the get_time_limit function
                 // time_limit = get_time_limit();
@@ -645,8 +646,6 @@
                         return;
                     }
                     choiceLocked = true;
-
-                    console.log("1. Lock in Choice clicked: Subject's Choice:", subjects_choice);
         
                     // Stop the countdown timer
                     clearInterval(countdownInterval);
@@ -666,9 +665,10 @@
                         return;
                     }
 
-                    console.log("2. Lock in Choice clicked: Subject's Choice:", subjects_choice);
+                    console.log("Lock in Choice clicked: Subject's Choice:", subjects_choice);
 
                     // record the time it took the subject to click the lock in choice button
+                    console.log("time_limit after choice locked in:", time_limit);
                     subjects_time = time_limit - timeRemaining;
         
                     // Disable the Lock in Choice button
@@ -683,8 +683,6 @@
                     document.getElementById("next-task").style.display = "inline-block";
                     document.getElementById("your_result").style.display = "inline-block";
                     document.getElementById("show_score").style.display = "inline-block";
-
-                    console.log("3. Lock in Choice clicked: Subject's Choice:", subjects_choice);
 
                     // Compare subjects_choice with correct_answer
                     if (subjects_choice === correct_answer) {
