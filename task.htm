@@ -53,7 +53,15 @@
     <div class="main" id="profile_details" style="display: block;">
         <table id=tab1>
             <tbody><tr>
+            <th>Mortgage Term</th>
+            <td>Loading...</td>
+            </tr>
+            <tr>
             <th>Annual Income</th>
+            <td>Loading...</td>
+            </tr>
+            <tr>
+            <th>Dependents</th>
             <td>Loading...</td>
             </tr>
             <tr>
@@ -61,18 +69,10 @@
             <td>Loading...</td>
             </tr>
             <tr>
-            <th>Mortgage Term</th>
-            <td>Loading...</td>
-            </tr>
-            <tr>
-            <th>Total Assets</th>
-            <td>Loading...</td>
-            </tr>
-            <tr>
             <th>Self Employed</th>
             <td>Loading...</td>
             </tr>
-            <th>No. Dependents</th>
+            <th>Total Assets</th>
             <td>Loading...</td>
             </tr>
         </table>
@@ -206,6 +206,9 @@
             let correct_answer; // Will be set after fetching data
             let commission;
             let penalty;
+            let maxPenalty; // maximum penalty for rejecting something that later gets approved by the bank
+            let bankApprovePenalty; // penalty for rejecting something that later gets approved by the bank
+            let bankRejectPenalty; // penalty for approving something that later gets rejected by the bank
             let total_score; // Total score as a string
             let next_challenge;
             let lockInChoiceButton;
@@ -293,8 +296,8 @@
                         document.getElementById("your_result").style.display = "inline-block"; // Show the your_result area
                         document.getElementById("show_score").style.display = "inline-block"; // Show the show_score area
                         document.getElementById("your_result").textContent = "Ran out of time!"; // Display the message
-                        document.getElementById("show_score").textContent = "Score: -$" + penalty.toLocaleString(); // Display the penalty
-                        total_score_new = parseInt(total_score) - penalty; // Deduct the penalty from the total score
+                        document.getElementById("show_score").textContent = "Score: -$" + maxPenalty.toLocaleString(); // Display the penalty
+                        total_score_new = parseInt(total_score) - maxPenalty; // Deduct the penalty from the total score
                         document.getElementById('total_score_div').textContent = 'Total Score: $' + total_score_new.toLocaleString(); // Update the total score
                     }
                 }, 1000); // Update every second
@@ -461,10 +464,16 @@
                         // Update the commission
                         document.getElementById('commission').textContent = 'Commission Amount: +$' + commission.toLocaleString();
 
-                        // calculate the penalty (0.5% of mortgage amount)
-                        penalty = Math.round(data['Mortgage'] * 0.005);
+
+                        // calculate the penalty for rejecting something that later gets approved by the bank (0.4%)
+                        bankApprovePenalty = Math.round(data['Mortgage'] * 0.004);
+
+                        // calculate the penalty for approving something that later gets rejected by the bank (0.6%)
+                        bankRejectPenalty = Math.round(data['Mortgage'] * 0.006);
+                        maxPenalty = bankRejectPenalty;
+
                         // Update the penalty
-                        document.getElementById('penalty').textContent = 'Penalty Amount: -$' + penalty.toLocaleString();
+                        document.getElementById('penalty').textContent = 'Penalty Amount: -$' + maxPenalty.toLocaleString();
 
                         // get the section
                         section = data['section'];
@@ -474,28 +483,28 @@
                         var tableBody = document.querySelector('#tab1 tbody');
                         tableBody.innerHTML = `
                             <tr>
+                                <th>Mortgage Term</th>
+                                <td>${data['Term']} Years</td>
+                            </tr>
+                            <tr>
                                 <th>Annual Income</th>
                                 <td>$${data['Income'].toLocaleString()}</td>
+                            </tr>
+                            <tr>
+                                <th>Dependents</th>
+                                <td>${data['Dependents']}</td>
                             </tr>
                             <tr>
                                 <th>Education</th>
                                 <td>${data['Education']}</td>
                             </tr>
                             <tr>
-                                <th>Mortgage Term</th>
-                                <td>${data['Term']} Years</td>
+                                <th>Self Employed</th>
+                                <td>${data['SEmployed']}</td>
                             </tr>
                             <tr>
                                 <th>Total Assets</th>
                                 <td>$${data['Assets'].toLocaleString()}</td>
-                            </tr>
-                            <tr>
-                                <th>Self Employed</th>
-                                <td>${data['SEmployed']}</td>
-                            </tr>
-                                                        <tr>
-                                <th>No. Dependents</th>
-                                <td>${data['Dependents']}</td>
                             </tr>
                         `;
         
@@ -700,6 +709,11 @@
                             total_score_new = parseInt(total_score);
                         }
                     } else {
+                        if (subjects_choice == 1) {
+                            penalty = bankRejectPenalty;
+                        } else {
+                            penalty = bankApprovePenalty;
+                        }
                         document.getElementById("your_result").textContent = "The bank and you don't agree!";
                         // if you are wrong, deduct the penalty from the score
                         document.getElementById("show_score").textContent = "Score: -$" + penalty.toLocaleString();
