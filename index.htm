@@ -67,7 +67,7 @@
             Before the actual task, let's first go through a tutorial, which can help you perform better in the formal experiment.
           </p>
           <div style="text-align:center;margin-top:30px;">
-            <a id="page-train" href="#" role="button" onclick="goToConsent()"
+            <a id="page-train" href="#" role="button" onclick="goToNext()"
             style="font-size:20px;background-color:rgb(10,55,95);color:white;padding:15px 30px;text-decoration:none;border-radius:10px;display:inline-block;">Start Tutorial</a>
           </div>
         </div>
@@ -75,7 +75,7 @@
     <script>
         let participantId;
 
-        function goToConsent() {
+        function goToNext() {
             window.location.href = `https://vancuvrboy.github.io/CPEN541/consent.htm?participantId=${participantId}`;
         }
     
