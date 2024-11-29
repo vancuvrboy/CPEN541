@@ -86,7 +86,7 @@
                 const row = document.createElement("tr");
                 row.innerHTML = `
                     <td>${index + 1}</td>
-                    <td>${score}</td>
+                    <td>$${parseInt(score).toLocaleString()}</td>
                 `;
                 if (index + 1 === partPos) {
                     row.classList.add("highlight");
