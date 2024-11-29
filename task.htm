@@ -642,7 +642,7 @@
                     // if it is 25, then redirect to final page
 
                     if (parseInt(next_challenge) == 8) {
-                        alert("You have finished 8 tasks. In the next 8 tasks you will be able to get help from two different AIs. In this case, before you are able to accept or reject a client, you must push the button beside the AI to activate it. You need to decide if you trust the AI to help you or not.");
+                        alert("You have finished 8 tasks. In the next 8 tasks you will be able to get help from two different AIs. In this case, before you are able to accept or reject a client, you must push the button beside the AI to activate it. You need to decide if you trust the AI recommendation or not.");
                         window.location.href = `https://vancuvrboy.github.io/CPEN541/task.htm?participantId=${participantId}&total_score=${total_score_new}&next_challenge=9&time_limit=120&total_tasks=25`;
                     } else if (parseInt(next_challenge) == 16) {
                         alert("You have finished 16 tasks. In the following 9 tasks you will have help from the same two AIs. But this time, you will have to decide which AI to trust for each task. Again you must activate one of the AIs before you can accept or reject a client.");
