@@ -61,7 +61,7 @@
         async function fetchLeaderboardData(participantId, totalScore) {
             try {
                 const response = await fetch(
-                    `https://script.google.com/macros/s/AKfycbwOLqXgnp5ksHsRpMZbmWSKXH3w_Wl2mn6PhWQpb4ViSNJx-gMC0pU7o7qb0BB5nqsWpw/exec?participantId=${participantId}&total_score=${totalScore}`
+                    `https://script.google.com/macros/s/AKfycbzW0vvl_j1kZfMq3UO4oqL3BLMFK3s-ozqb3yWC5sDu73viqBaVTabDeGA5W7Sh_pYDQg/exec?participantId=${participantId}&total_score=${totalScore}`
                 );
                 const data = await response.json();
                 console.log("Leaderboard data:", data);
