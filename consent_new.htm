@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Consent Form</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body style="background-color:rgb(220,240,255); color:rgb(10,55,95); padding:20px;">
+
+<div class="container">
+    <h1 style="text-align:center; color:rgb(10,55,95);">Consent Form</h1>
+    <p style="font-size:20px;">
+        Before proceeding with the main task, we need your consent to participate in this study. Please read the following information carefully and click "Accept" to continue if you agree.
+    </p>
+
+    <div class="card my-3">
+        <div class="card-header" style="background-color:rgb(10,55,95); color:white;">
+            <h3>About the Study</h3>
+        </div>
+        <div class="card-body" style="font-size:18px;">
+            <p>
+                This research study is conducted by student researchers Barry Jinks (<a href="mailto:barry@jinksfamily.com">barry@jinksfamily.com</a>) and Aleksandr Volosiuk (<a href="mailto:aavolosiuk@gmail.com">aavolosiuk@gmail.com</a>) as part of a project for CPEN 541 at the University of British Columbia's Department of Electrical and Computer Engineering.
+            </p>
+            <p>
+                The purpose of this study is to investigate participants’ preferences for AI assistants in the context of selecting mortgage broker clients.
+            </p>
+        </div>
+    </div>
+
+    <div class="card my-3">
+        <div class="card-header" style="background-color:rgb(10,55,95); color:white;">
+            <h3>What You Will Be Asked to Do</h3>
+        </div>
+        <div class="card-body" style="font-size:18px;">
+            <ul>
+                <li>Answer a brief demographic and self-assessment questionnaire.</li>
+                <li>Review profiles of potential clients looking for mortgage broker assistance.</li>
+                <li>Make decisions on which clients to accept based on their profiles and AI recommendations.</li>
+                <li>Participate in a short post-experiment debriefing to provide feedback.</li>
+            </ul>
+            <p>
+                The session will take approximately 45–60 minutes to complete in one sitting.
+            </p>
+        </div>
+    </div>
+
+    <div class="card my-3">
+        <div class="card-header" style="background-color:rgb(10,55,95); color:white;">
+            <h3>Confidentiality</h3>
+        </div>
+        <div class="card-body" style="font-size:18px;">
+            <p>
+                We will collect anonymized data such as demographic information (optional), self-assessed confidence in choosing clients, decisions made during the experiment, and reasoning for AI choices.
+            </p>
+            <p>
+                All data will be securely stored on encrypted drives. Findings from this study may be used in academic publications or presentations, but no personal references will be made.
+            </p>
+        </div>
+    </div>
+
+    <div class="card my-3">
+        <div class="card-header" style="background-color:rgb(10,55,95); color:white;">
+            <h3>Voluntary Participation</h3>
+        </div>
+        <div class="card-body" style="font-size:18px;">
+            <p>
+                Participation in this study is entirely voluntary. You are free to withdraw at any time without consequences.
+            </p>
+            <p>
+                For questions about this study, please contact Barry Jinks (<a href="mailto:barry@jinksfamily.com">barry@jinksfamily.com</a>) or Aleksandr Volosiuk (<a href="mailto:aavolosiuk@gmail.com">aavolosiuk@gmail.com</a>).
+            </p>
+            <p>
+                For questions about your rights as a research participant, you may contact the UBC Research Participant Complaint Line at 604-822-8598 or toll-free at 1-877-822-8598, or email <a href="mailto:RSIL@ors.ubc.ca">RSIL@ors.ubc.ca</a>.
+            </p>
+        </div>
+    </div>
+
+    <div class="text-center my-4">
+        <a id="accept_button" class="btn btn-primary btn-lg" href="#" role="button" 
+           style="text-decoration: none;" onclick="handleConsent('Accept')">Accept</a>
+        <a id="reject_button" class="btn btn-secondary btn-lg" href="#" role="button" 
+           style="text-decoration: none;" data-bs-toggle="modal" data-bs-target="#confirmModal">Reject</a>
+    </div>
+
+    <!-- Confirmation Modal -->
+    <div class="modal fade" id="confirmModal" tabindex="-1" aria-labelledby="confirmModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="confirmModalLabel">Are you sure?</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    Are you sure you want to reject? You cannot proceed with the study if you reject the consent form.
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" onclick="handleConsent('Reject')">Yes</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    let participantId;
+    let consent;
+
+    // Function to extract query parameters
+    function getQueryParameter(param) {
+        var urlParams = new URLSearchParams(window.location.search);
+        return urlParams.get(param);
+    }
+
+    // Function to handle consent button clicks
+    function handleConsent(choice) {
+        console.log("Consent choice:", choice);
+        consent = choice;
+
+        // Store the completed task data
+        storeCompletedTaskData();
+
+        // Redirect if "Accept"
+        if (choice === 'Accept') {
+            console.log("Redirecting to training page...");
+            const redirectUrl = `https://vancuvrboy.github.io/CPEN541/training.htm?participantId=${participantId}`;
+            window.location.href = redirectUrl;
+        } else if (choice === 'Reject') {
+            console.log("Consent rejected.");
+            const redirectUrl = `https://ubc.ca`;
+            window.location.href = redirectUrl;
+        }
+    }
+
+    // Function to store the completed task data in Google Sheets
+    function storeCompletedTaskData() {
+        const scriptUrl = "https://script.google.com/macros/s/AKfycbyX6EXj-GAsdqOPRhjF5hCTFZZtbqi_OD4AY9yJsn5Vt1kUzqOoczPbXMMhAAhtIMwmrg/exec";
+        const queryString = `?consent=${consent}&participantId=${participantId}`;
+        console.log("Query String:", queryString);
+
+        fetch(scriptUrl + queryString, {
+            method: 'GET',
+        })
+        .then((result) => result.text())
+        .then((text) => {
+            console.log('Server Response:', text);
+            alert('Task data submitted successfully!');
+        })
+        .catch((error) => {
+            console.error('Error submitting task data:', error);
+            alert('An error occurred. Please try again.');
+        });
+    }
+
+    // Prepopulate Participant ID field
+    document.addEventListener("DOMContentLoaded", function () {
+        participantId = getQueryParameter("participantId") || "P1234";
+    });
+</script>
+</body>
+</html>
