@@ -389,6 +389,7 @@
                 const Q5 = document.getElementById("Q5").value;
                 const Q6 = document.getElementById("Q6").value;
                 const Q7 = document.getElementById("Q7").value;
+                const Q7 = document.getElementById("Q8").value;
 
                 // Construct the URL for the Google Apps Script
                 const scriptUrl = "https://script.google.com/macros/s/AKfycbyX6EXj-GAsdqOPRhjF5hCTFZZtbqi_OD4AY9yJsn5Vt1kUzqOoczPbXMMhAAhtIMwmrg/exec";
@@ -404,9 +405,10 @@
                 let qs8 = `&Q5=${Q5}`;
                 let qs9 = `&Q6=${Q6}`;
                 let qs10 = `&Q7=${Q7}`;
-                let qs11 = `&participantId=${participantId}`;
+                let qs11 = `&Q7=${Q8}`;
+                let qs12 = `&participantId=${participantId}`;
                 
-                let queryString = qs1 + qs2 + qs3 + qs4 + qs5 + qs6 + qs7 + qs8 + qs9 + qs10 + qs11;
+                let queryString = qs1 + qs2 + qs3 + qs4 + qs5 + qs6 + qs7 + qs8 + qs9 + qs10 + qs11+ qs12;
                 console.log("queryString: ", queryString);   
 
                 // Send a GET request to the Google Apps Script
