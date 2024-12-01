@@ -810,14 +810,14 @@
 
                     function typeCharacter() {
                         if (typingStage === 0) {
-                            // Typing from textbot_text
-                            if (index < textbot_text.length) {
-                                aiText.textContent += textbot_text[index];
+                            // Typing from textbot_recommend
+                            if (index < textbot_recommend.length) {
+                                aiText.textContent += textbot_recommend[index];
                                 index++;
                                 setTimeout(typeCharacter, typingSpeed); // Adjust typing speed here
                             } else {
                                 typingStage = 1; // Move to the next stage
-                                index = 0; // Reset index for textbot_recommend
+                                index = 0; // Reset index for textbot_text
                                 // Delay with "Generating..." before the second text
                                 generateWithDelay(aiText, secondDelay, () => {
                                     aiText.textContent += "\n\n"; // Add line feed
@@ -825,14 +825,15 @@
                                 });
                             }
                         } else if (typingStage === 1) {
-                            // Typing from textbot_recommend
-                            if (index < textbot_recommend.length) {
-                                aiText.textContent += textbot_recommend[index];
+                            // Typing from textbot_text
+                            if (index < textbot_text.length) {
+                                aiText.textContent += textbot_text[index];
                                 index++;
                                 setTimeout(typeCharacter, typingSpeed); // Adjust typing speed here
                             }
                         }
                     }
+
 
                     if (!text_played) {
                         aiText.textContent = ""; // Clear the text box before typing
