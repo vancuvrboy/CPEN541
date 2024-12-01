@@ -19,9 +19,19 @@
         .form-inline label {
             margin-right: 5px;
         }
-        .form-check-label {
-            margin-right: 10px;
-            font-size: 14px;
+        .form-check-label-left {
+        margin-right: 10px;
+        font-size: 14px;
+        width: 140px; /* Set a fixed width */
+        text-align: center; /* Center align text within the label */
+        display: inline-block; /* Ensures consistent spacing */
+        }
+        .form-check-label-right {
+        margin-right: 10px;
+        font-size: 14px;
+        width: 122px; /* Set a fixed width */
+        text-align: center; /* Center align text within the label */
+        display: inline-block; /* Ensures consistent spacing */
         }
         .list-group-item h4 {
             font-size: 16px;
@@ -38,19 +48,64 @@
             align-items: center;
             padding: 0 15px;
         }
-
+    
         .slider {
             width: 75%;
             margin: 0 10px;
+            -webkit-appearance: none;
+            appearance: none;
+            background: none;
         }
-
+    
+        /* Style for the slider track */
+        .slider::-webkit-slider-runnable-track {
+            height: 6px;
+            background: rgb(150, 150, 150); /* Adjust to desired darker grey tone */
+            border-radius: 3px;
+        }
+        .slider::-moz-range-track {
+            height: 6px;
+            background: rgb(150, 150, 150); /* For Firefox */
+            border-radius: 3px;
+        }
+        .slider::-ms-track {
+            height: 6px;
+            background: rgb(150, 150, 150); /* For IE */
+            border-radius: 3px;
+        }
+    
+        /* Style for the slider thumb */
+        .slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 15px;
+            height: 15px;
+            background: rgb(10, 55, 95);
+            border-radius: 50%;
+            cursor: pointer;
+        }
+        .slider::-moz-range-thumb {
+            width: 15px;
+            height: 15px;
+            background: rgb(10, 55, 95);
+            border-radius: 50%;
+            cursor: pointer;
+        }
+        .slider::-ms-thumb {
+            width: 15px;
+            height: 15px;
+            background: rgb(10, 55, 95);
+            border-radius: 50%;
+            cursor: pointer;
+        }
+    
         .numerical-scale {
             position: relative;
             width: 75%;
             margin: 10px auto;
             height: 20px;
         }
-
+    
         .numerical-scale div {
             position: absolute;
             width: 100%;
@@ -58,12 +113,12 @@
             left: 0;
             height: 20px;
         }
-
+    
         .numerical-scale span {
             position: absolute;
             transform: translateX(-50%);
         }
-
+    
         .numerical-scale span:nth-child(1) { left: 3%; }
         .numerical-scale span:nth-child(2) { left: 19%; }
         .numerical-scale span:nth-child(3) { left: 35%; }
@@ -71,7 +126,53 @@
         .numerical-scale span:nth-child(5) { left: 67%; }
         .numerical-scale span:nth-child(6) { left: 83%; }
         .numerical-scale span:nth-child(7) { left: 99%; }
+
+    /* Input, select, and textarea styles */
+    input[type="text"], input[type="number"], select, textarea {
+        border: 2px solid rgb(150, 150, 150); /* Match slider's darker grey tone */
+        border-radius: 4px;
+        background-color: #f8f9fa;
+        padding: 8px;
+        font-size: 14px;
+        width: auto;
+        box-shadow: none; /* Override Bootstrap's box shadow */
+    }
+
+    /* Apply consistent padding and alignment for select elements */
+    select {
+        padding: 8px; /* Ensure consistent padding */
+        background-color: #f8f9fa; /* Light grey background */
+        border: 2px solid rgb(150, 150, 150); /* Match slider's border color */
+        border-radius: 4px; /* Rounded corners */
+        appearance: none; /* Remove default dropdown styling */
+        width: auto; /* Flexible width */
+        background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 4 5'%3E%3Cpath fill='%23969696' d='M2 0L0 2h4z'/%3E%3C/svg%3E");
+        background-repeat: no-repeat;
+        background-position: right 10px center;
+        background-size: 10px;
+    }
+
+    textarea {
+        resize: vertical; /* Allow vertical resizing only */
+    }
+
+    /* Focus styles */
+    input:focus, select:focus, textarea:focus {
+        border-color: rgb(120, 120, 120); /* Slightly darker border on focus */
+        outline: none;
+        box-shadow: 0 0 5px rgba(120, 120, 120, 0.5); /* Subtle focus shadow */
+    }
+    .form-control,
+    .form-select {
+        background-color: rgb(320, 320, 320); /* Match the darker grey tone */
+        border: 2px solid rgb(150, 150, 150); /* Darker grey for borders */
+        color: rgb(10, 55, 95); /* Match text color */
+        border-radius: 5px; /* Optional: rounded corners */
+        padding: 5px 10px; /* Adjust padding for consistent spacing */
+        font-size: 14px; /* Consistent font size */
+    }
     </style>
+    
 </head>
 <body>
 
@@ -135,11 +236,11 @@
                 <ul class="list-group list-group-flush">
                     <!-- Question Template -->
                     <li class="list-group-item" style="position: relative;">
-                        <h4>Q1. It was difficult to choose which clients to accept.</h4>
+                        <h4>Q1. How easy was it to choose which clients to accept.</h4>
                         <div class="slider-container">
-                            <label class="form-check-label">Strongly Disagree</label>
+                            <label class="form-check-label-left">Very Easy</label>
                             <input type="range" class="form-range slider" min="1" max="7" step="1" id="Q1">
-                            <label class="form-check-label">Strongly Agree</label>
+                            <label class="form-check-label-right">Very Hard</label>
                         </div>
                         <!-- Numerical Scale -->
                         <div class="numerical-scale">
@@ -151,9 +252,9 @@
                     <li class="list-group-item" style="position: relative;">
                         <h4>Q2. I was confident during the decision-making process.</h4>
                         <div class="slider-container">
-                            <label class="form-check-label">Strongly Disagree</label>
+                            <label class="form-check-label-left">Strongly Disagree</label>
                             <input type="range" class="form-range slider" min="1" max="7" step="1" id="Q2">
-                            <label class="form-check-label">Strongly Agree</label>
+                            <label class="form-check-label-right">Strongly Agree</label>
                         </div>
                         <div class="numerical-scale">
                             <div>
@@ -164,9 +265,9 @@
                     <li class="list-group-item" style="position: relative;">
                         <h4>Q3. The AI recommendations helped me to make better decisions.</h4>
                         <div class="slider-container">
-                            <label class="form-check-label">Strongly Disagree</label>
+                            <label class="form-check-label-left">Strongly Disagree</label>
                             <input type="range" class="form-range slider" min="1" max="7" step="1" id="Q3">
-                            <label class="form-check-label">Strongly Agree</label>
+                            <label class="form-check-label-right">Strongly Agree</label>
                         </div>
                         <!-- Numerical Scale -->
                         <div class="numerical-scale">
@@ -178,9 +279,9 @@
                     <li class="list-group-item" style="position: relative;">
                         <h4>Q4. I trusted the recommendations of the AI textbot.</h4>
                         <div class="slider-container">
-                            <label class="form-check-label">Strongly Disagree</label>
+                            <label class="form-check-label-left">Strongly Disagree</label>
                             <input type="range" class="form-range slider" min="1" max="7" step="1" id="Q4">
-                            <label class="form-check-label">Strongly Agree</label>
+                            <label class="form-check-label-right">Strongly Agree</label>
                         </div>
                         <!-- Numerical Scale -->
                         <div class="numerical-scale">
@@ -192,9 +293,9 @@
                     <li class="list-group-item" style="position: relative;">
                         <h4>Q5. I trusted the recommendations of the AI videobot.</h4>
                         <div class="slider-container">
-                            <label class="form-check-label">Strongly Disagree</label>
+                            <label class="form-check-label-left">Strongly Disagree</label>
                             <input type="range" class="form-range slider" min="1" max="7" step="1" id="Q5">
-                            <label class="form-check-label">Strongly Agree</label>
+                            <label class="form-check-label-right">Strongly Agree</label>
                         </div>
                         <!-- Numerical Scale -->
                         <div class="numerical-scale">
@@ -206,9 +307,9 @@
                     <li class="list-group-item" style="position: relative;">
                         <h4>Q6. Which AI was more accurate in its recommendations?</h4>
                         <div class="slider-container">
-                            <label class="form-check-label">Videobot</label>
+                            <label class="form-check-label-left">Videobot</label>
                             <input type="range" class="form-range slider" min="1" max="7" step="1" id="Q6">
-                            <label class="form-check-label">Textbot</label>
+                            <label class="form-check-label-right">Textbot</label>
                         </div>
                         <!-- Numerical Scale -->
                         <div class="numerical-scale">
@@ -220,9 +321,23 @@
                     <li class="list-group-item" style="position: relative;">
                         <h4>Q7. I would like to use AI to make decisions in the future.</h4>
                         <div class="slider-container">
-                            <label class="form-check-label">Strongly Disagree</label>
+                            <label class="form-check-label-left">Strongly Disagree</label>
                             <input type="range" class="form-range slider" min="1" max="7" step="1" id="Q7">
-                            <label class="form-check-label">Strongly Agree</label>
+                            <label class="form-check-label-right">Strongly Agree</label>
+                        </div>
+                        <!-- Numerical Scale -->
+                        <div class="numerical-scale">
+                            <div>
+                                <span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span><span>7</span>
+                            </div>
+                        </div>
+                    </li>
+                    <li class="list-group-item" style="position: relative;">
+                        <h4>Q8. I felt pressure to make the right decision.</h4>
+                        <div class="slider-container">
+                            <label class="form-check-label-left">Strongly Disagree</label>
+                            <input type="range" class="form-range slider" min="1" max="7" step="1" id="Q7">
+                            <label class="form-check-label-right">Strongly Agree</label>
                         </div>
                         <!-- Numerical Scale -->
                         <div class="numerical-scale">
