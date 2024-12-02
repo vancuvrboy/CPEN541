@@ -263,8 +263,9 @@
             let maxChallenges = 50; // Maximum number of tasks that can ever be run (used for the progress bar)
             let total_tasks; // Total number of tasks in the experiment
             let ai_choices; // AI choices setup in the 541_cases sheet obtained in fetchData
-            let section; // Section of the experiment. Section drives how much time is given to the subject
+            let section; // Section drives how much time is given to the subject. Deprecated.
             let textbot_recommend; // recommendation from the textbot
+            let timing_equation; // equation to calculate the time limit
         
             // Timer variables
             let timerElement;
@@ -389,40 +390,90 @@
                         alert('An error occurred. Please try again.');
                     });
             }
-
             // function to get the time limit
-            // if the time_limit parameter is set with the querystrin, use that value
-            // otherwise get it from the google sheet by calling an app script requesting a value
-            // from the cell defined by the row participantID and the column name derived from "time_limit"+section
+            // if the time_limit parameter is set with the querystring, use that value
+            // otherwise get it from the google sheet by calling an app script described below
             async function getTimeLimit() {
                 let time_limit = getQueryParameter('time_limit');
                 if (time_limit) {
                     console.log('Using time limit from query string:', time_limit);
                     return parseInt(time_limit);
                 } else {
-                    const scriptUrl = "https://script.google.com/macros/s/AKfycbznEvtFQj1fciuUNcQlrqfR2kTyVKrqLenaybztrwPS_6mMChP4XXpgefIKg-freI_yQw/exec";
-                    let queryString = `?section=${section}&participantId=${participantId}`;
-                    console.log("getTimeLimit queryString: ", queryString);
-
-                    try {
-                        const response = await fetch(scriptUrl + queryString, {
-                            method: 'GET',
-                        });
-                        const data = await response.text(); // Treat response as plain text
-                        console.log('Raw Server Response:', data);
-
-                        // Parse the response as a number
-                        time_limit = parseInt(data);
-                        if (isNaN(time_limit)) {
-                            throw new Error('Server returned invalid time limit');
+                    //parse the timing equation. It's a string of the form <base time>(optional)+<time adder>(optional)
+                    //if neither is present, default to 180
+                    //base time is an integer. time adder is a string that corresponds to a column in the timing_equation sheet
+                    let base_time = 0;
+                    let time_adder = "";
+                    let time_adder_value = 0;
+                    let time_limit = 180;
+                    if (timing_equation.includes("+")) {
+                        let equation_parts = timing_equation.split("+");
+                        base_time = parseInt(equation_parts[0]);
+                        time_adder = equation_parts[1];
+                    } else {
+                        //figure out whether the timing equation is just a number
+                        if (timing_equation.match(/^\d+$/)) {
+                            base_time = parseInt(timing_equation);
                         }
-
-                        console.log('time_limit:', time_limit);
-                        return time_limit;
-                    } catch (error) {
-                        console.error('Error fetching time limit:', error);
-                        return 180; // Default to 180 seconds if an error occurs
+                        else
+                        {
+                            time_adder = timing_equation;
+                        }
                     }
+                    //if there is a time adder, get the value from the google sheet
+                    if (time_adder) {
+                        // determine which values to extract for time_adder.
+                        // time adder is a string that corresponds to a math function and range of values in the Experimental Data sheet
+                        // of the form <math function>(<range>)
+                        // possible ranges at the moment are 2-8 and 10-16, but in the future this could be expanded
+                        // at the moment, the math functions are "median" and "mean"
+                        let math_function = "";
+                        let range = "";
+                        if (time_adder.includes("(") && time_adder.includes(")")) {
+                            let parts = time_adder.split("(");
+                            math_function = parts[0];
+                            range = parts[1].replace(")", "");
+                        }
+                        console.log('Math Function:', math_function);
+                        console.log('Range:', range);
+                        // assemble the query string to extract the range of values
+                        // for a row defined by participantId, and columns defined by the string time<range>
+                        // first step, determine how many columns must be extracted
+                        let range_parts = range.split("-");
+                        let start_range = parseInt(range_parts[0]);
+                        let end_range = parseInt(range_parts[1]);
+                        let num_columns = end_range - start_range + 1;
+                        console.log('Start Range:', start_range);
+                        console.log('End Range:', end_range);
+                        console.log('Num Columns:', num_columns);
+                        // assemble the query string, including participantId, range of columns and the math function
+                        let queryString = `?participantId=${participantId}&start_range=${start_range}&num_columns=${num_columns}&math_function=${math_function}`;
+                        console.log('getTimeLimit queryString:', queryString);
+                        // fetch the data from the google sheet
+                        const scriptUrl = "https://script.google.com/macros/s/AKfycbxTYAYpOVWmi6FV0fKlQDbYrT5cNDgSN7BPyEobbi0CxqdN9CpJNGhpyCH1_ESdYaJLrQ/exec";
+                        try {
+                            const response = await fetch(scriptUrl + queryString, {
+                                method: 'GET',
+                            });
+                            const data = await response.text(); // Treat response as plain text
+                            console.log('Raw Server Response:', data);
+                            // Parse the response as a number
+                            time_adder_value = parseInt(data);
+                            if (isNaN(time_adder_value)) {
+                                throw new Error('Server returned invalid time adder value');
+                            }
+                            console.log('Time Adder Value:', time_adder_value);
+                        } catch (error) {
+                            console.error('Error fetching time adder value:', error);
+                            return 180; // Default to 180 seconds if an error occurs
+                        }
+                    }
+                    console.log('Base Time:', base_time);
+                    console.log('Time Adder:', time_adder);
+                    console.log('Time Adder Value:', time_adder_value);
+                    time_limit = base_time + time_adder_value;
+                    console.log('Time Limit:', time_limit);
+                    return time_limit;
                 }
             }
 
@@ -552,6 +603,8 @@
                         // get the AI choices
                         ai_choices = data['ai_choices'];
                         console.log('AI Choices:', ai_choices);
+
+                        timing_equation=data['timing_equation'];
                         
                         return getTimeLimit();
                     })
@@ -624,14 +677,6 @@
                 // update & display total score
                 document.getElementById('total_score_div').textContent = 'Total Score: $' + parseInt(total_score).toLocaleString();
                 next_challenge = getQueryParameter('next_challenge') || '1';
-
-                
-
-                // get time_limit from the get_time_limit function
-                // time_limit = get_time_limit();
-                
-                // get limt_limit from the query string
-                // time_limit = getQueryParameter('time_limit') || '180'; // Default to '180' if not provided
                 
                 // get total_tasks from the query string
                 total_tasks = getQueryParameter('total_tasks') || '25'; // Default to '25' if not provided
