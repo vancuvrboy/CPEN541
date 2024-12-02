@@ -205,8 +205,19 @@
         }
 
         document.addEventListener("DOMContentLoaded", async function () {
-            participantId = getQueryParameter("participantId") || "NotValid";
+            participantId = getQueryParameter("participantId");
             console.log("Participant ID:", participantId);
+
+            // check is participantId is blank
+            if (participantId === null || participantId === "") {
+                // pop an alert and ask the user to enter the participantId
+                participantId = prompt("Welcome to our study. Before we can start, please enter your participant ID:");
+                // if participantId is blank or null when the user hits OK, the reload the page
+                if (participantId === null || participantId === "") {
+                    location.reload();
+
+                }
+            }
 
             // Check if participant already exists
             await checkParticipantInLeaderboard();
