@@ -1,0 +1,942 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Mortgage Broker AI Assistance Game</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta name="referrer" content="no-referrer">
+    
+    <!-- Bootstrap CSS (CDN) -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+
+    <!-- Custom Styles -->
+    <style>
+        /* Table Styles */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        table tr {
+            border-bottom: solid 2px white;
+        }
+        table tr:last-child {
+            border-bottom: none;
+        }
+        table th {
+            position: relative;
+            width: 30%;
+            background-color: #7d7d7d;
+            color: white;
+            text-align: center;
+            padding: 10px 0;
+        }
+        table td {
+            width: 70%;
+            text-align: center;
+            background-color: #eee;
+            padding: 10px 0;
+        }
+
+        /* Progress Bar Styles (if custom styles are still needed) */
+        .progress {
+            margin-bottom: 20px;
+        }
+
+        /* General Layout */
+        .main {
+            margin: 20px auto;
+            width: 80%;
+        }
+        #wrap1 {
+            display: flex;
+            justify-content: flex-start;
+        }
+        #wrap2 {
+            display: flex;
+            justify-content: flex-start;
+            flex-wrap: wrap;
+        }
+    </style>
+</head>
+    <body>
+    
+    <div class=container>
+    <h2 id=title1>Mortgage Broker AI Assistance <small> Helping you to make more money by choosing the right clients</small></h2>
+    
+    <div id="attention" class="well" style="position: relative;">
+        <b>ATTENTION:</b> During the whole experiment, please <b>DO NOT</b> refresh the browser. Otherwise, all data will be lost.
+        <!-- Total score container -->
+        <div id="total_score_div" style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); font-weight: bold; font-size: 20px; color: black; display: block;">
+            <!-- Score will be displayed here -->
+            Total Score: Loading...
+        </div>
+    </div>
+    
+    
+    <div class=tab-content>
+    <div id=home class="tab-pane fade sf-hidden">
+    </div>
+    <div id=bottom style=display:block>
+    <ul class=pager> <li>
+    </li> </ul>
+    <div class=progress>
+    <div id=progressbar1 class="progress-bar progress-bar-striped progress-bar-animated" role=progressbar aria-valuenow=75 aria-valuemin=0 aria-valuemax=100 style=width:0%>0%</div>
+    </div>
+    </div>
+    
+    <div id=newdemo1 class="tab-pane fade active in" style=display:block>
+    <div class=row>
+    <div id=profile class=col-xs-5 style="height: 380px;">
+    <h3 id=mortgage align=center>Mortgage Amount: Loading...</h3>
+    <h5 id=commission align=center>Commission Amount: Loading...</h5>
+    <h5 id=penalty align=center>Max Penalty Amount: Loading...</h5>
+    
+    <div class="main" id="profile_details" style="display: block;">
+        <table id=tab1>
+            <tbody><tr>
+            <th>Mortgage Term</th>
+            <td>Loading...</td>
+            </tr>
+            <tr>
+            <th>Annual Income</th>
+            <td>Loading...</td>
+            </tr>
+            <tr>
+            <th>Dependents</th>
+            <td>Loading...</td>
+            </tr>
+            <tr>
+            <th>Education</th>
+            <td>Loading...</td>
+            </tr>
+            <tr>
+            <th>Self Employed</th>
+            <td>Loading...</td>
+            </tr>
+            <th>Total Assets</th>
+            <td>Loading...</td>
+            </tr>
+        </table>
+    </div>
+    </div>
+    
+    <div class=col-xs-7>
+    
+    
+        <div class="container-fluid list-group-item list-group-item-warning" id="user_prediction_region" style="height: 368px;">
+            <h3 id="decision-instructions">Loading...</h3>
+        
+            <p></p>
+            <form id="decision" class="container-fluid list-group-item list-group-item-light" style="display: none; height: 240px;">
+                <li class="list-group-item list-group-item-light">
+                    <div class="form-group">
+                        <div style="display: inline-block;">
+                            <h4>
+                                What is your decision?
+                            </h4>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="firstdecision" value="0" id="reject-client">
+                            <label class="form-check-label" for="reject-client">Reject Client</label>
+                        </div>
+        
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="firstdecision" value="1" id="accept-client">
+                            <label class="form-check-label" for="accept-client">Accept Client</label>
+                        </div>
+                    </div>
+                </li>
+        
+                <!-- Buttons and Result Area -->
+                <div class="button-result-container" style="display: flex; align-items: center; margin-top: 10px;">
+                    <!-- Lock in Choice Button -->
+                    <button id="lock-in-choice" type="button" class="btn btn-primary" disabled>Lock in Choice</button>
+        
+                    <!-- Your Result Area -->
+                    <div id="your_result" style="margin-left: 10px; display: none; font-weight: bold;">
+                        <!-- Result will be displayed here -->
+                    </div>
+
+                    <!-- Show $ added to score -->
+                    <div id="show_score" style="margin-left: 10px; display: none; font-weight: bold;">
+                        <!-- Score will be displayed here -->
+                    </div>
+        
+                    <!-- Finish and Next Button -->
+                    <button id="next-task" type="button" class="btn btn-primary" data-dismiss="modal" style="margin-left: 10px; display: none;">Finish and Next</button>
+
+                </div>
+        
+                <li id="showanswer_area" class="list-group-item list-group-item-light" style="display: none;">
+                </li>
+            </form>
+        
+            <!-- Countdown Timer -->
+            <div id="countdown_timer" style="margin-left: 20px; margin-top: 20px; font-size: 20px; text-align: left; font-weight: bold; color: darkred; display: none;">
+                Loading ...
+            </div>
+        </div>
+</div>
+
+</div> 
+    <div id=wrap1 class="container-fluid list-group-item list-group-item-light">
+    
+        <div id="ai_confidence" style="display: flex; gap: 20px; align-items: center;">
+            <!-- AI Prediction Text Box -->
+            <div id="ai_text" 
+                 style="width: 480px; 
+                        height: 270px; 
+                        border: 2px solid black; 
+                        display: none; 
+                        align-items: flex-start; 
+                        justify-content: flex-start; 
+                        padding: 10px; 
+                        background-color: white; 
+                        font-size: 14px; 
+                        overflow: hidden; 
+                        white-space: pre-wrap;">
+              <!-- Initially blank -->
+            </div>
+          
+            <!-- AI Video Container -->
+            <div id="video_container" 
+                 style="width: 480px; 
+                        height: 270px; 
+                        border: 2px solid black; 
+                        display: none; 
+                        align-items: center; 
+                        justify-content: center; 
+                        background-color: white;">
+              <!-- Placeholder text or an empty space -->
+              <p id="video_placeholder" 
+                 style="display: block; 
+                        font-size: 14px; 
+                        color: gray; 
+                        text-align: center;">
+                Videobot will make prediction here
+              </p>
+              <video id="ai_video" width="480" height="270" style="display: none;">
+                <source id="video_source" src="" type="video/mp4">
+                Your browser does not support the video tag.
+              </video>
+            </div>
+          
+            <!-- AI Prediction Buttons -->
+            <div id="ai_buttons" 
+                 style="display: flex; 
+                        flex-direction: column; 
+                        gap: 10px; 
+                        height: 270px; 
+                        width: 100px;">
+              <button id="textbot_btn" class="btn btn-primary" style="flex: 1; display: none;">Textbot</button>
+              <button id="audiobot_btn" class="btn btn-primary" style="flex: 1; display: none;">Audiobot</button>
+              <button id="videobot_btn" class="btn btn-primary" style="flex: 1; display: none;">Videobot</button>
+            </div>
+          </div>
+          
+        
+          <script>
+            // Global variables
+            let allData = []; // Cache to store all data
+            let textbot_text;
+            let audiovideobot_text;
+            let audiobot_video;
+            let videobot_video;
+            let text_played = false;
+            let subjects_choice;
+            let subjects_time;
+            let correct_answer;
+            let commission;
+            let penalty;
+            let maxPenalty;
+            let bankApprovePenalty;
+            let bankRejectPenalty;
+            let total_score = 0;
+            let next_challenge = parseInt(getQueryParameter('next_challenge')) || 1;
+            let lockInChoiceButton;
+            let radioButtons;
+            let choiceLocked = true;
+            let participantId = getQueryParameter('participantId') || "NotValid";
+            let chosenAI = "none";
+            let time_limit;
+            let maxChallenges = 50;
+            let total_tasks = 25;
+            let ai_choices;
+            let textbot_recommend;
+            let timing_equation;
+            let typingTimeoutId;
+            let generateDelayTimeoutId;
+            let dotIntervalId;
+            let typingActive = false;
+            let time_adder_values = {};
+        
+            // Timer variables
+            let timerElement;
+            let timeRemaining;
+            let countdownInterval;
+        
+            // Function to get query parameter
+            function getQueryParameter(param) {
+                var urlParams = new URLSearchParams(window.location.search);
+                return urlParams.get(param);
+            }
+        
+            // Functions used by AI buttons
+            function disableOtherButtons(exceptButtonId) {
+                const buttons = ['textbot_btn', 'audiobot_btn', 'videobot_btn'];
+                buttons.forEach(function (buttonId) {
+                    if (buttonId !== exceptButtonId) {
+                        document.getElementById(buttonId).disabled = true;
+                    }
+                });
+            }
+        
+            function updateLockInButtonState() {
+                if (!choiceLocked) {
+                    for (const radio of radioButtons) {
+                        if (radio.checked) {
+                            lockInChoiceButton.disabled = false;
+                            return;
+                        }
+                    }
+                }
+                lockInChoiceButton.disabled = true;
+            }
+        
+            function showProfileDetails() {
+                const profileDetails = document.getElementById("profile_details");
+                profileDetails.style.display = "block";
+                const decision = document.getElementById("decision");
+                decision.style.display = "block";
+                console.log("Profile Details shown. Value of time_limit:", time_limit);
+            }
+        
+            // Timer functions
+            function updateTimerDisplay() {
+                const minutes = Math.floor(timeRemaining / 60);
+                const seconds = timeRemaining % 60;
+                timerElement.textContent = `Time Remaining: ${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+            }
+        
+            function resetTimer(fetched_time_limit) {
+                if (countdownInterval) {
+                    clearInterval(countdownInterval);
+                }
+                timeRemaining = fetched_time_limit;
+                updateTimerDisplay();
+                countdownInterval = setInterval(() => {
+                    if (timeRemaining > 0) {
+                        timeRemaining--;
+                        updateTimerDisplay();
+                    } else {
+                        clearInterval(countdownInterval);
+                        countdownInterval = null;
+                        timerElement.textContent = "Time's up!";
+                        timeOutActions();
+                    }
+                }, 1000);
+            }
+        
+            function timeOutActions() {
+                console.log("Time's up! Handling timeout actions...");
+                const decision = document.getElementById("decision");
+                decision.style.display = "block";
+                subjects_time = time_limit;
+                lockInChoiceButton.disabled = true;
+                for (const radio of radioButtons) {
+                    radio.disabled = true;
+                }
+                document.getElementById("next-task").style.display = "inline-block";
+                document.getElementById("your_result").style.display = "inline-block";
+                document.getElementById("show_score").style.display = "inline-block";
+                document.getElementById("your_result").textContent = "Ran out of time!";
+                document.getElementById("show_score").textContent = "Score: -$" + maxPenalty.toLocaleString();
+                total_score -= maxPenalty;
+                document.getElementById('total_score_div').textContent = 'Total Score: $' + total_score.toLocaleString();
+            }
+
+            // Function to add an effect that makes it look like an AI is generating the response (unchanged)
+            function generateWithDelay(container, delay, callback) {
+                if (!typingActive) {
+                    return; // Exit if typing is no longer active
+                }
+
+                if (delay === 0) {
+                    callback();
+                    return;
+                }
+
+                const generatingText = document.createElement("div");
+                generatingText.id = "generatingText";
+                generatingText.textContent = "Generating";
+                container.appendChild(generatingText);
+
+                let dotCount = 0;
+
+                // Add moving dots
+                dotIntervalId = setInterval(() => {
+                    if (!typingActive) {
+                        clearInterval(dotIntervalId);
+                        dotIntervalId = null;
+                        return;
+                    }
+                    generatingText.textContent = "Generating" + ".".repeat(dotCount % 4);
+                    dotCount++;
+                }, 500); // Dots appear at a rate of 2 per second
+
+                // Stop the animation after the delay and invoke the callback
+                generateDelayTimeoutId = setTimeout(() => {
+                    if (!typingActive) {
+                        return;
+                    }
+                    clearInterval(dotIntervalId); // Stop the moving dots
+                    dotIntervalId = null;
+                    generatingText.remove(); // Remove the "Generating..." text
+                    callback(); // Invoke the callback after the delay
+                }, delay);
+            }
+
+        
+            // Function to store the completed task data in Google Sheets
+            function storeCompletedTaskData() {
+                console.log("TaskComplete: Participant ID:", participantId);
+                console.log("TaskComplete: Total Score:", total_score);
+                console.log("TaskComplete: Correct Answer:", correct_answer);
+                console.log("TaskComplete: Subject's Choice:", subjects_choice);
+                console.log("TaskComplete: Time Spent:", subjects_time);
+                console.log("TaskComplete: Chosen AI:", chosenAI);
+        
+                const scriptUrl = "https://script.google.com/macros/s/AKfycbyX6EXj-GAsdqOPRhjF5hCTFZZtbqi_OD4AY9yJsn5Vt1kUzqOoczPbXMMhAAhtIMwmrg/exec";
+        
+                let qs1 = `?score${next_challenge}=${total_score}`;
+                let qs2 = `&bank${next_challenge}=${correct_answer}`;
+                let qs3 = `&choice${next_challenge}=${subjects_choice}`;
+                let qs4 = `&time${next_challenge}=${subjects_time}`;
+                let qs5 = `&AI${next_challenge}=${chosenAI}`;
+                let qs6 = `&participantId=${participantId}`;
+        
+                let queryString = qs1 + qs2 + qs3 + qs4 + qs5 + qs6;
+                console.log("queryString: ", queryString);
+        
+                fetch(scriptUrl + queryString, {
+                    method: 'GET',
+                })
+                    .then((result) => result.text())
+                    .then((text) => {
+                        console.log('Server Response:', text);
+                    })
+                    .catch((error) => {
+                        console.error('Error submitting task data:', error);
+                        alert('An error occurred. Please try again.');
+                    });
+            }
+        
+            // Function to get the time limit
+            async function getTimeLimit() {
+                let base_time = 0;
+                let time_adder = "";
+                let time_adder_value = 0;
+                let time_limit = 120;
+        
+                if (timing_equation.includes("+")) {
+                    let equation_parts = timing_equation.split("+");
+                    base_time = parseInt(equation_parts[0]);
+                    time_adder = equation_parts[1];
+                } else {
+                    if (timing_equation.match(/^\d+$/)) {
+                        base_time = parseInt(timing_equation);
+                    } else {
+                        time_adder = timing_equation;
+                    }
+                }
+        
+                if (time_adder) {
+                    if (time_adder_values.hasOwnProperty(time_adder)) {
+                        time_adder_value = time_adder_values[time_adder];
+                        console.log(`Using cached time_adder_value for '${time_adder}': ${time_adder_value}`);
+                    } else {
+                        let math_function = "";
+                        let range = "";
+                        if (time_adder.includes("(") && time_adder.includes(")")) {
+                            let parts = time_adder.split("(");
+                            math_function = parts[0];
+                            range = parts[1].replace(")", "");
+                        } else {
+                            console.error(`Invalid time_adder format: ${time_adder}`);
+                            return 120;
+                        }
+        
+                        let [start_range, end_range] = range.split("-").map(Number);
+                        let num_columns = end_range - start_range + 1;
+        
+                        let queryString = `?participantId=${participantId}&start_range=${start_range}&num_columns=${num_columns}&math_function=${math_function}`;
+                        console.log("Time Adder Query String:", queryString);
+        
+                        const scriptUrl = "https://script.google.com/macros/s/AKfycbxTYAYpOVWmi6FV0fKlQDbYrT5cNDgSN7BPyEobbi0CxqdN9CpJNGhpyCH1_ESdYaJLrQ/exec";
+                        try {
+                            const response = await fetch(scriptUrl + queryString, { method: 'GET' });
+                            const data = await response.text();
+                            time_adder_value = parseInt(data);
+                            if (isNaN(time_adder_value)) {
+                                throw new Error('Server returned invalid time adder value');
+                            }
+                            time_adder_values[time_adder] = time_adder_value;
+                            console.log(`Fetched and cached time_adder_value for '${time_adder}': ${time_adder_value}`);
+                        } catch (error) {
+                            console.error('Error fetching time adder value:', error);
+                            return 120;
+                        }
+                    }
+                }
+        
+                time_limit = base_time + time_adder_value;
+                if (time_limit < 15) {
+                    time_limit = 15;
+                }
+                console.log('Final Time Limit:', time_limit);
+                return time_limit;
+            }
+        
+            // Function to fetch all data from Google Apps Script
+            function fetchAllData() {
+                console.log('Fetching all data...');
+                var scriptURL = 'https://script.google.com/macros/s/AKfycbzMBjxP2pTbWLcRQaaCIPTm_a5BUOpmWfIfiDyAHyZXSGo5KUjJzycq9pUqQIVkkAG_2w/exec';
+                return fetch(scriptURL)
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('Network response was not OK');
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        allData = data;
+                        console.log('All data fetched:', allData);
+                    })
+                    .catch(error => {
+                        console.error('Error fetching all data:', error);
+                    });
+            }
+        
+            // Function to fetch data for the current challenge from the cache
+            function fetchData() {
+                console.log('fetchData function is called.');
+        
+                // Find the data for the current 'next_challenge'
+                let data = allData.find(item => item['ID'].toString() === next_challenge.toString());
+        
+                if (!data) {
+                    console.error('No data found for next_challenge:', next_challenge);
+                    return;
+                }
+        
+                textbot_text = data['text_pred'];
+                audiovideobot_text = data['av_pred'];
+                textbot_recommend = data['text_recom'];
+                audiobot_video = "https://vancuvrboy.github.io/CPEN541/" + data['audio_url'];
+                videobot_video = "https://vancuvrboy.github.io/CPEN541/" + data['video_url'];
+        
+                // Update the Mortgage Amount
+                document.getElementById('mortgage').textContent = 'Mortgage Amount: $' + parseInt(data['Mortgage']).toLocaleString();
+        
+                // Calculate commission (1% of mortgage amount)
+                commission = Math.round(parseInt(data['Mortgage']) * 0.01);
+                // Update the commission
+                document.getElementById('commission').textContent = 'Commission Amount: +$' + commission.toLocaleString();
+        
+                // Calculate the penalty for rejecting something that later gets approved by the bank (0.4%)
+                bankApprovePenalty = Math.round(parseInt(data['Mortgage']) * 0.004);
+        
+                // Calculate the penalty for approving something that later gets rejected by the bank (0.6%)
+                bankRejectPenalty = Math.round(parseInt(data['Mortgage']) * 0.006);
+                maxPenalty = bankRejectPenalty;
+        
+                // Update the penalty
+                document.getElementById('penalty').textContent = 'Max Penalty Amount: -$' + maxPenalty.toLocaleString();
+        
+                // Update the table of attributes
+                var tableBody = document.querySelector('#tab1 tbody');
+                tableBody.innerHTML = `
+                    <tr>
+                        <th>Mortgage Term</th>
+                        <td>${data['Term']} Years</td>
+                    </tr>
+                    <tr>
+                        <th>Annual Income</th>
+                        <td>$${parseInt(data['Income']).toLocaleString()}</td>
+                    </tr>
+                    <tr>
+                        <th>Dependents</th>
+                        <td>${data['Dependents']}</td>
+                    </tr>
+                    <tr>
+                        <th>Education</th>
+                        <td>${data['Education']}</td>
+                    </tr>
+                    <tr>
+                        <th>Self Employed</th>
+                        <td>${data['SEmployed']}</td>
+                    </tr>
+                    <tr>
+                        <th>Total Assets</th>
+                        <td>$${parseInt(data['Assets']).toLocaleString()}</td>
+                    </tr>
+                `;
+        
+                // Set the correct_answer variable
+                correct_answer = data['Approved'].toString();
+                console.log('Correct Answer:', correct_answer);
+        
+                // Get the AI choices
+                ai_choices = data['ai_choices'];
+                console.log('AI Choices:', ai_choices);
+        
+                timing_equation = data['timing_equation'];
+        
+                getTimeLimit().then(fetched_time_limit => {
+                    console.log('Fetched time_limit:', fetched_time_limit);
+        
+                    // Initialize the timer
+                    time_limit = fetched_time_limit;
+                    resetTimer(time_limit);
+        
+                    // Show timer
+                    timerElement = document.getElementById("countdown_timer");
+                    timerElement.style.display = "block";
+        
+                    choiceLocked = false;
+                    updateLockInButtonState();
+        
+                    // Enable the buttons based on the ai_choices
+                    const textDecision = document.getElementById("decision-instructions");
+        
+                    // Now that you have the profile details and the time limit, show them
+                    const profileDetails = document.getElementById("profile_details");
+                    profileDetails.style.display = "block";
+        
+                    resetAIComponents();
+        
+                    if (ai_choices.includes("video")) {
+                        document.getElementById("videobot_btn").style.display = "inline-block";
+                        document.getElementById("video_container").style.display = "flex";
+                        document.getElementById("video_placeholder").style.display = "block";
+                        textDecision.textContent = "Start your AI assistant, then make your decision";
+                    }
+                    if (ai_choices.includes("audio")) {
+                        document.getElementById("audiobot_btn").style.display = "inline-block";
+                        document.getElementById("video_container").style.display = "flex";
+                        document.getElementById("video_placeholder").style.display = "block";
+                        textDecision.textContent = "Start your AI assistant, then make your decision";
+                    }
+                    if (ai_choices.includes("text")) {
+                        document.getElementById("textbot_btn").style.display = "inline-block";
+                        document.getElementById("ai_text").style.display = "block";
+                        textDecision.textContent = "Start your AI assistant, then make your decision";
+                    }
+                    if (ai_choices == "none" || ai_choices == "") {
+                        const decision = document.getElementById("decision");
+                        decision.style.display = "block";
+                        textDecision.textContent = "Make your decision";
+                    }
+                });
+            }
+        
+            function resetAIComponents() {
+                const aiButtons = ['textbot_btn', 'audiobot_btn', 'videobot_btn'];
+                aiButtons.forEach(function (buttonId) {
+                    const button = document.getElementById(buttonId);
+                    button.style.display = "none";
+                    button.disabled = false;
+                });
+                document.getElementById("ai_text").style.display = "none";
+                document.getElementById("ai_text").textContent = "";
+                const videoContainer = document.getElementById("video_container");
+                videoContainer.style.display = "none";
+                const videoPlaceholder = document.getElementById("video_placeholder");
+                videoPlaceholder.style.display = "block";
+                const video = document.getElementById("ai_video");
+                video.style.display = "none";
+                video.pause();
+                const videoSource = document.getElementById("video_source");
+                videoSource.src = "";
+            }
+        
+            // Function to reset the page for the next challenge
+            function resetPage() {
+                console.log("Resetting page for challenge:", next_challenge);
+        
+                resetAIComponents();
+        
+                const timerElement = document.getElementById("countdown_timer");
+                timerElement.style.display = "none";
+        
+                typingActive = false;
+        
+                if (typingTimeoutId) {
+                    clearTimeout(typingTimeoutId);
+                    typingTimeoutId = null;
+                }
+                if (generateDelayTimeoutId) {
+                    clearTimeout(generateDelayTimeoutId);
+                    generateDelayTimeoutId = null;
+                }
+                if (dotIntervalId) {
+                    clearInterval(dotIntervalId);
+                    dotIntervalId = null;
+                }
+        
+                typingStage = 0;
+                index = 0;
+        
+                const aiText = document.getElementById("ai_text");
+                if (aiText) {
+                    aiText.textContent = "";
+                }
+        
+                choiceLocked = true;
+                text_played = false;
+                subjects_choice = undefined;
+                subjects_time = undefined;
+                chosenAI = "none";
+        
+                lockInChoiceButton.disabled = true;
+                for (const radio of radioButtons) {
+                    radio.checked = false;
+                    radio.disabled = false;
+                }
+        
+                document.getElementById("next-task").style.display = "none";
+                document.getElementById("your_result").style.display = "none";
+                document.getElementById("show_score").style.display = "none";
+        
+                const profileDetails = document.getElementById("profile_details");
+                profileDetails.style.display = "none";
+                const decision = document.getElementById("decision");
+                decision.style.display = "none";
+        
+                const progressPercentage = (next_challenge / total_tasks) * 100;
+                const progressBar = document.getElementById('progressbar1');
+                progressBar.style.width = `${progressPercentage}%`;
+                progressBar.setAttribute('aria-valuenow', progressPercentage.toFixed(0));
+                progressBar.innerText = `${progressPercentage.toFixed(0)}%`;
+        
+                document.getElementById('total_score_div').textContent = 'Total Score: $' + total_score.toLocaleString();
+        
+                fetchData();
+            }
+        
+            // Page initialization
+            document.addEventListener("DOMContentLoaded", function () {
+        
+                console.log("Loading Page: Participant ID:", participantId);
+                console.log("Loading Page: Next Challenge:", next_challenge);
+        
+                lockInChoiceButton = document.getElementById("lock-in-choice");
+                radioButtons = document.getElementsByName('firstdecision');
+                timerElement = document.getElementById("countdown_timer");
+        
+                updateLockInButtonState();
+        
+                for (const radio of radioButtons) {
+                    radio.addEventListener('change', updateLockInButtonState);
+                }
+        
+                // Fetch all data once
+                fetchAllData().then(() => {
+                    // Initialize the first challenge
+                    resetPage();
+                });
+        
+                // Next-task button click handler
+                document.getElementById("next-task").addEventListener("click", function () {
+                    storeCompletedTaskData();
+        
+                    next_challenge = parseInt(next_challenge);
+        
+                    if (next_challenge == 8) {
+                        alert("You have finished 8 tasks. In the next 8 tasks you will be able to get help from two different AIs. In this case, before you are able to accept or reject a client, you must push the button beside the AI to activate it. You need to decide if you trust the AI recommendation or not.");
+                    } else if (next_challenge == 16) {
+                        alert("You have finished 16 tasks. In the following 9 tasks you will have help from the same two AIs. But this time, you will have to decide which AI to trust for each task. Again you must activate one of the AIs before you can accept or reject a client.");
+                    } else if (next_challenge == 25) {
+                        alert("You have completed all your tasks! Now we'd like to ask a few questions before you see how you did against other participants.");
+                        window.location.href = `https://vancuvrboy.github.io/CPEN541/survey.htm?participantId=${participantId}&total_score=${total_score}`;
+                        return;
+                    }
+        
+                    next_challenge += 1;
+        
+                    resetPage();
+                });
+        
+                // Lock in Choice button click handler
+                lockInChoiceButton.addEventListener("click", function () {
+                    if (choiceLocked) {
+                        return;
+                    }
+                    choiceLocked = true;
+        
+                    clearInterval(countdownInterval);
+                    countdownInterval = null;
+        
+                    subjects_choice = undefined;
+                    for (const radio of radioButtons) {
+                        if (radio.checked) {
+                            subjects_choice = radio.value;
+                            break;
+                        }
+                    }
+        
+                    if (subjects_choice === undefined) {
+                        alert("Please make a selection before locking in your choice.");
+                        return;
+                    }
+        
+                    console.log("Lock in Choice clicked: Subject's Choice:", subjects_choice);
+        
+                    subjects_time = time_limit - timeRemaining;
+        
+                    lockInChoiceButton.disabled = true;
+        
+                    for (const radio of radioButtons) {
+                        radio.disabled = true;
+                    }
+        
+                    document.getElementById("next-task").style.display = "inline-block";
+                    document.getElementById("your_result").style.display = "inline-block";
+                    document.getElementById("show_score").style.display = "inline-block";
+        
+                    if (subjects_choice === correct_answer) {
+                        document.getElementById("your_result").textContent = "The bank and you agree!";
+                        if (subjects_choice == 1) {
+                            document.getElementById("show_score").textContent = "Score: +$" + commission.toLocaleString();
+                            total_score += commission;
+                            document.getElementById('total_score_div').textContent = 'Total Score: $' + total_score.toLocaleString();
+                        } else {
+                            document.getElementById("show_score").textContent = "Score: +$0";
+                        }
+                    } else {
+                        if (subjects_choice == 1) {
+                            penalty = bankRejectPenalty;
+                        } else {
+                            penalty = bankApprovePenalty;
+                        }
+                        document.getElementById("your_result").textContent = "The bank and you don't agree!";
+                        document.getElementById("show_score").textContent = "Score: -$" + penalty.toLocaleString();
+                        total_score -= penalty;
+                        document.getElementById('total_score_div').textContent = 'Total Score: $' + total_score.toLocaleString();
+                    }
+        
+                    console.log("F&N shown: Subject's Choice:", subjects_choice);
+                    console.log("F&N shown: Time Spent:", subjects_time);
+                    console.log("F&N shown: Participant ID:", participantId);
+                    console.log("F&N shown: Total Score:", total_score);
+                    console.log("F&N shown: Next Challenge:", next_challenge + 1);
+                });
+        
+                // AI Button Event Listeners
+                // Textbot button click handler
+                document.getElementById("textbot_btn").addEventListener("click", function () {
+                    disableOtherButtons('textbot_btn');
+                    const decision = document.getElementById("decision");
+                    decision.style.display = "block";
+                    chosenAI = "textbot";
+        
+                    const placeholder = document.getElementById("video_placeholder");
+                    placeholder.style.display = "block";
+                    const video = document.getElementById("ai_video");
+                    video.style.display = "none";
+                    video.pause();
+        
+                    const aiText = document.getElementById("ai_text");
+        
+                    let index = 0;
+                    let typingStage = 0;
+                    typingActive = true;
+        
+                    let firstDelay = 3000;
+                    let secondDelay = 5000;
+                    let typingSpeed = 30;
+        
+                    function typeCharacter() {
+                        if (!typingActive) {
+                            return;
+                        }
+                        if (typingStage === 0) {
+                            if (index < textbot_recommend.length) {
+                                aiText.textContent += textbot_recommend[index];
+                                index++;
+                                typingTimeoutId = setTimeout(typeCharacter, typingSpeed);
+                            } else {
+                                typingStage = 1;
+                                index = 0;
+                                generateWithDelay(aiText, secondDelay, () => {
+                                    if (!typingActive) {
+                                        return;
+                                    }
+                                    aiText.textContent += "\n\n";
+                                    typeCharacter();
+                                });
+                            }
+                        } else if (typingStage === 1) {
+                            if (index < textbot_text.length) {
+                                aiText.textContent += textbot_text[index];
+                                index++;
+                                typingTimeoutId = setTimeout(typeCharacter, typingSpeed);
+                            }
+                        }
+                    }
+        
+                    if (!text_played) {
+                        aiText.textContent = "";
+                        generateWithDelay(aiText, 3000, () => {
+                            typeCharacter();
+                        });
+                        text_played = true;
+                    }
+                });
+        
+                // Audiobot button click handler
+                document.getElementById("audiobot_btn").addEventListener("click", function () {
+                    disableOtherButtons('audiobot_btn');
+                    const decision = document.getElementById("decision");
+                    decision.style.display = "block";
+                    chosenAI = "audiobot";
+        
+                    const placeholder = document.getElementById("video_placeholder");
+                    placeholder.style.display = "none";
+        
+                    const video = document.getElementById("ai_video");
+                    const videoSource = document.getElementById("video_source");
+                    videoSource.src = audiobot_video;
+                    video.load();
+                    video.style.display = "block";
+                    video.controls = false;
+                    video.play();
+                });
+        
+                // Videobot button click handler
+                document.getElementById("videobot_btn").addEventListener("click", function () {
+                    disableOtherButtons('videobot_btn');
+                    const decision = document.getElementById("decision");
+                    decision.style.display = "block";
+                    chosenAI = "videobot";
+        
+                    const placeholder = document.getElementById("video_placeholder");
+                    placeholder.style.display = "none";
+        
+                    const video = document.getElementById("ai_video");
+                    const videoSource = document.getElementById("video_source");
+                    videoSource.src = videobot_video;
+                    video.load();
+                    video.style.display = "block";
+                    video.controls = false;
+                    video.play();
+                });
+            });
+        </script>
+         
+    </div>
+</div>
+</div>
+</body></html>
+   
