@@ -134,25 +134,31 @@
         }
     }
 
-    // Function to store the completed task data in Google Sheets
     function storeCompletedTaskData() {
         const scriptUrl = "https://script.google.com/macros/s/AKfycbyX6EXj-GAsdqOPRhjF5hCTFZZtbqi_OD4AY9yJsn5Vt1kUzqOoczPbXMMhAAhtIMwmrg/exec";
-        const queryString = `?consent=${consent}&participantId=${participantId}`;
+        const queryString = `?consent=${encodeURIComponent(consent)}&participantId=${encodeURIComponent(participantId)}`;
         console.log("Query String:", queryString);
 
         fetch(scriptUrl + queryString, {
             method: 'GET',
         })
-        .then((result) => result.text())
+        .then((response) => {
+            return response.text();
+        })
         .then((text) => {
             console.log('Server Response:', text);
-            alert('Task data submitted successfully!');
+            if (text.trim() === "Success") {
+                alert('Consent recorded successfully!');
+            } else {
+                throw new Error('Server did not confirm successful data storage.');
+            }
         })
         .catch((error) => {
-            console.error('Error submitting task data:', error);
-            alert('An error occurred. Please try again.');
+            console.error('Error submitting consent data:', error);
+            alert('An error occurred while saving your data. Please check your internet connection and try again. If the problem persists, please contact the researchers.');
         });
     }
+
 
     // Prepopulate Participant ID field
     document.addEventListener("DOMContentLoaded", function () {

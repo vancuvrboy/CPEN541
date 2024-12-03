@@ -380,55 +380,62 @@
         return urlParams.get(param);
     }
 
-    // function to store the completed task data in google sheets
     function storeCompletedTaskData() {
-                // Extract the values from the form
-                const age = document.getElementById("age").value;
-                const gender = document.getElementById("gender").value;
-                const klai = document.getElementById("experience").value;
-                const Q1 = document.getElementById("Q1").value;
-                const Q2 = document.getElementById("Q2").value;
-                const Q3 = document.getElementById("Q3").value;
-                const Q4 = document.getElementById("Q4").value;
-                const Q5 = document.getElementById("Q5").value;
-                const Q6 = document.getElementById("Q6").value;
-                const Q7 = document.getElementById("Q7").value;
-                const Q8 = document.getElementById("Q8").value;
+    // Extract the values from the form
+        const age = document.getElementById("age").value;
+        const gender = document.getElementById("gender").value;
+        const klai = document.getElementById("experience").value;
+        const Q1 = document.getElementById("Q1").value;
+        const Q2 = document.getElementById("Q2").value;
+        const Q3 = document.getElementById("Q3").value;
+        const Q4 = document.getElementById("Q4").value;
+        const Q5 = document.getElementById("Q5").value;
+        const Q6 = document.getElementById("Q6").value;
+        const Q7 = document.getElementById("Q7").value;
+        const Q8 = document.getElementById("Q8").value;
 
-                // Construct the URL for the Google Apps Script
-                const scriptUrl = "https://script.google.com/macros/s/AKfycbyX6EXj-GAsdqOPRhjF5hCTFZZtbqi_OD4AY9yJsn5Vt1kUzqOoczPbXMMhAAhtIMwmrg/exec";
+        // Construct the URL for the Google Apps Script
+        const scriptUrl = "https://script.google.com/macros/s/AKfycbyX6EXj-GAsdqOPRhjF5hCTFZZtbqi_OD4AY9yJsn5Vt1kUzqOoczPbXMMhAAhtIMwmrg/exec";
 
-                // Assemble Query String entries as strings based on post pending next_challenge to the variable names
-                let qs1 = `?age=${age}`;
-                let qs2 = `&gender=${gender}`;
-                let qs3 = `&klai=${klai}`;
-                let qs4 = `&Q1=${Q1}`;
-                let qs5 = `&Q2=${Q2}`;
-                let qs6 = `&Q3=${Q3}`;
-                let qs7 = `&Q4=${Q4}`;
-                let qs8 = `&Q5=${Q5}`;
-                let qs9 = `&Q6=${Q6}`;
-                let qs10 = `&Q7=${Q7}`;
-                let qs11 = `&Q8=${Q8}`;
-                let qs12 = `&participantId=${participantId}`;
-                
-                let queryString = qs1 + qs2 + qs3 + qs4 + qs5 + qs6 + qs7 + qs8 + qs9 + qs10 + qs11+ qs12;
-                console.log("queryString: ", queryString);   
+        // Assemble Query String entries
+        let params = new URLSearchParams();
+        params.append('participantId', participantId);
+        params.append('age', age);
+        params.append('gender', gender);
+        params.append('klai', klai);
+        params.append('Q1', Q1);
+        params.append('Q2', Q2);
+        params.append('Q3', Q3);
+        params.append('Q4', Q4);
+        params.append('Q5', Q5);
+        params.append('Q6', Q6);
+        params.append('Q7', Q7);
+        params.append('Q8', Q8);
 
-                // Send a GET request to the Google Apps Script
-                fetch(scriptUrl + queryString, {
-                    method: 'GET',
-                })
-                    .then((result) => result.text())
-                    .then((text) => {
-                        console.log('Server Response:', text);
-                        alert('Task data submitted successfully!');
-                    })
-                    .catch((error) => {
-                        console.error('Error submitting task data:', error);
-                        alert('An error occurred. Please try again.');
-                    });
+        const queryString = '?' + params.toString();
+        console.log("Query String:", queryString);
+
+        // Send a GET request to the Google Apps Script
+        fetch(scriptUrl + queryString, {
+            method: 'GET',
+        })
+        .then((response) => {
+            return response.text();
+        })
+        .then((text) => {
+            console.log('Server Response:', text);
+            if (text.trim() === "Success") {
+                alert('Survey data submitted successfully!');
+            } else {
+                throw new Error('Server did not confirm successful data storage.');
             }
+        })
+        .catch((error) => {
+            console.error('Error submitting survey data:', error);
+            alert('An error occurred while saving your data. Please check your internet connection and try again.');
+        });
+    }
+
 
     // Prepopulate Participant ID field
     document.addEventListener("DOMContentLoaded", function () {

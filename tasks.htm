@@ -400,6 +400,8 @@
         
             // Function to store the completed task data in Google Sheets
             function storeCompletedTaskData() {
+                const MAX_RETRIES = 3;
+
                 console.log("TaskComplete: Participant ID:", participantId);
                 console.log("TaskComplete: Total Score:", total_score);
                 console.log("TaskComplete: Correct Answer:", correct_answer);
@@ -419,16 +421,28 @@
                 let queryString = qs1 + qs2 + qs3 + qs4 + qs5 + qs6;
                 console.log("queryString: ", queryString);
         
-                fetch(scriptUrl + queryString, {
-                    method: 'GET',
-                })
-                    .then((result) => result.text())
+                return fetch(scriptUrl + queryString, { method: 'GET' })
+                    .then((response) => {
+                        if (!response.ok) {
+                            throw new Error('Network response was not OK');
+                        }
+                        return response.text();
+                    })
                     .then((text) => {
                         console.log('Server Response:', text);
+                        if (text.trim() !== 'Success') {
+                            throw new Error('Server did not confirm successful data storage.');
+                        }
                     })
                     .catch((error) => {
                         console.error('Error submitting task data:', error);
-                        alert('An error occurred. Please try again.');
+                        if (retryCount < MAX_RETRIES) {
+                            console.log(`Retrying... (${retryCount + 1}/${MAX_RETRIES})`);
+                            return storeCompletedTaskData(retryCount + 1);
+                        } else {
+                            alert('An error occurred while saving your data after multiple attempts. Please check your internet connection and try again. If the problem persists, please contact the researchers.');
+                            throw error;
+                        }
                     });
             }
         
@@ -749,23 +763,31 @@
         
                 // Next-task button click handler
                 document.getElementById("next-task").addEventListener("click", function () {
-                    storeCompletedTaskData();
+                    // Disable the next-task button to prevent multiple clicks
+                    this.disabled = true;
+                    
+                    // Store the completed task data before moving to the next challenge
+                    storeCompletedTaskData().then(() => {
         
-                    next_challenge = parseInt(next_challenge);
-        
-                    if (next_challenge == 8) {
-                        alert("You have finished 8 tasks. In the next 8 tasks you will be able to get help from two different AIs. In this case, before you are able to accept or reject a client, you must push the button beside the AI to activate it. You need to decide if you trust the AI recommendation or not.");
-                    } else if (next_challenge == 16) {
-                        alert("You have finished 16 tasks. In the following 9 tasks you will have help from the same two AIs. But this time, you will have to decide which AI to trust for each task. Again you must activate one of the AIs before you can accept or reject a client.");
-                    } else if (next_challenge == 25) {
-                        alert("You have completed all your tasks! Now we'd like to ask a few questions before you see how you did against other participants.");
-                        window.location.href = `https://vancuvrboy.github.io/CPEN541/survey.htm?participantId=${participantId}&total_score=${total_score}`;
-                        return;
-                    }
-        
-                    next_challenge += 1;
-        
-                    resetPage();
+                        next_challenge = parseInt(next_challenge);
+            
+                        if (next_challenge == 8) {
+                            alert("You have finished 8 tasks. In the next 8 tasks you will be able to get help from two different AIs. In this case, before you are able to accept or reject a client, you must push the button beside the AI to activate it. You need to decide if you trust the AI recommendation or not.");
+                        } else if (next_challenge == 16) {
+                            alert("You have finished 16 tasks. In the following 9 tasks you will have help from the same two AIs. But this time, you will have to decide which AI to trust for each task. Again you must activate one of the AIs before you can accept or reject a client.");
+                        } else if (next_challenge == 25) {
+                            alert("You have completed all your tasks! Now we'd like to ask a few questions before you see how you did against other participants.");
+                            window.location.href = `https://vancuvrboy.github.io/CPEN541/survey.htm?participantId=${participantId}&total_score=${total_score}`;
+                            return;
+                        }
+            
+                        next_challenge += 1;
+            
+                        resetPage();
+
+                        this.disabled = false; // Re-enable the next-task button
+
+                    })
                 });
         
                 // Lock in Choice button click handler
