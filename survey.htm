@@ -360,10 +360,9 @@
         <!-- <button id="submitFeedback" class="btn btn-primary btn-lg" 
           onclick="window.location.href='https://vancuvrboy.github.io/CPEN541/final.htm';"> -->
         <!-- when the button is clicked it fetched participantId and total_score from the querystring and appends them to the url 'https://vancuvrboy.github.io/CPEN541/final.htm' -->
-        <button id="submitFeedback" class="btn btn-primary btn-lg"
-            onclick="storeCompletedTaskData(); window.location.href='https://vancuvrboy.github.io/CPEN541/final.htm?participantId=' + participantId + '&total_score=' + total_score;">
+        <button id="submitFeedback" class="btn btn-primary btn-lg">
             Submit & Go to Leaderboard
-        </button>
+        </button>        
     </div>
 </div>
 
@@ -372,8 +371,24 @@
     let participantId;
     let total_score;
 
+    document.getElementById("submitFeedback").addEventListener("click", function() {
+        // Optionally disable the button to prevent multiple clicks
+        this.disabled = true;
 
-    
+        storeCompletedTaskData()
+            .then(() => {
+                // Data stored successfully, proceed to next page
+                window.location.href = 'https://vancuvrboy.github.io/CPEN541/final.htm?participantId=' + participantId + '&total_score=' + total_score;
+            })
+            .catch((error) => {
+                // Handle errors here
+                console.error('Error storing data:', error);
+                alert('An error occurred while saving your data. Please check your internet connection and try again.');
+                // Re-enable the button to allow retry
+                this.disabled = false;
+            });
+    });
+
     // Function to extract query parameters
     function getQueryParameter(param) {
         var urlParams = new URLSearchParams(window.location.search);
@@ -381,7 +396,7 @@
     }
 
     function storeCompletedTaskData() {
-    // Extract the values from the form
+        // Extract the values from the form
         const age = document.getElementById("age").value;
         const gender = document.getElementById("gender").value;
         const klai = document.getElementById("experience").value;
@@ -415,8 +430,8 @@
         const queryString = '?' + params.toString();
         console.log("Query String:", queryString);
 
-        // Send a GET request to the Google Apps Script
-        fetch(scriptUrl + queryString, {
+        // **Return the promise so that we can chain .then() after calling this function**
+        return fetch(scriptUrl + queryString, {
             method: 'GET',
         })
         .then((response) => {
@@ -425,7 +440,7 @@
         .then((text) => {
             console.log('Server Response:', text);
             if (text.trim() === "Success") {
-                alert('Survey data submitted successfully!');
+                console.log('Data stored successfully.');
             } else {
                 throw new Error('Server did not confirm successful data storage.');
             }
@@ -433,8 +448,11 @@
         .catch((error) => {
             console.error('Error submitting survey data:', error);
             alert('An error occurred while saving your data. Please check your internet connection and try again.');
+            // **Re-throw the error to allow the calling function to handle it**
+            throw error;
         });
     }
+
 
 
     // Prepopulate Participant ID field
