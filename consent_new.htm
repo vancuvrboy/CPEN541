@@ -154,7 +154,7 @@
         .then((text) => {
             console.log('Server Response:', text);
             if (text.trim() === "Success") {
-                alert('Consent recorded successfully!');
+                console.log('Consent recorded successfully!');
             } else {
                 throw new Error('Server did not confirm successful data storage.');
             }
