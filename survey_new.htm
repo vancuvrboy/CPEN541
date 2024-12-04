@@ -389,9 +389,6 @@
             });
     });
 
-
-
-    
     // Function to extract query parameters
     function getQueryParameter(param) {
         var urlParams = new URLSearchParams(window.location.search);
@@ -443,7 +440,7 @@
         .then((text) => {
             console.log('Server Response:', text);
             if (text.trim() === "Success") {
-                alert('Survey data submitted successfully!');
+                console.log('Data stored successfully.');
             } else {
                 throw new Error('Server did not confirm successful data storage.');
             }
