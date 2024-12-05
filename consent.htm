@@ -120,18 +120,24 @@
         consent = choice;
 
         // Store the completed task data
-        storeCompletedTaskData();
-
-        // Redirect if "Accept"
-        if (choice === 'Accept') {
-            console.log("Redirecting to training page...");
-            const redirectUrl = `https://vancuvrboy.github.io/CPEN541/training.htm?participantId=${participantId}`;
-            window.location.href = redirectUrl;
-        } else if (choice === 'Reject') {
-            console.log("Consent rejected.");
-            const redirectUrl = `https://ubc.ca`;
-            window.location.href = redirectUrl;
-        }
+        storeCompletedTaskData()
+           .then(() => {
+                // Redirect if "Accept"
+                if (choice === 'Accept') {
+                    console.log("Redirecting to training page...");
+                    const redirectUrl = `https://vancuvrboy.github.io/CPEN541/training.htm?participantId=${participantId}`;
+                    window.location.href = redirectUrl;
+                } else if (choice === 'Reject') {
+                    console.log("Consent rejected.");
+                    const redirectUrl = `https://ubc.ca`;
+                    window.location.href = redirectUrl;
+                }
+            })
+            .catch((error) => {
+                // Handle errors here
+                console.error('Error storing data:', error);
+                alert('An error occurred while saving your data. Please check your internet connection and try again.');
+            });
     }
 
     function storeCompletedTaskData() {
@@ -139,7 +145,7 @@
         const queryString = `?consent=${encodeURIComponent(consent)}&participantId=${encodeURIComponent(participantId)}`;
         console.log("Query String:", queryString);
 
-        fetch(scriptUrl + queryString, {
+        return fetch(scriptUrl + queryString, {
             method: 'GET',
         })
         .then((response) => {
@@ -148,7 +154,7 @@
         .then((text) => {
             console.log('Server Response:', text);
             if (text.trim() === "Success") {
-                alert('Consent recorded successfully!');
+                console.log('Consent recorded successfully!');
             } else {
                 throw new Error('Server did not confirm successful data storage.');
             }
